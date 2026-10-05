@@ -40,8 +40,25 @@
     font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 48px; }
+  .top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
   h1 { font-size: 1.6rem; margin: 0 0 4px; letter-spacing: -.01em; }
-  .sub { color: var(--muted); margin: 0 0 20px; }
+  .sub { color: var(--muted); margin: 0; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; padding: 9px 18px; }
+  .btn.primary:hover { filter: brightness(1.1); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #1a1210; } }
+
+  dialog { width: min(680px, calc(100vw - 32px)); max-height: calc(100vh - 32px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 14px; padding: 0; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
+  dialog::backdrop { background: rgba(0,0,0,.45); }
+  .dlg { padding: 20px; display: grid; gap: 14px; }
+  .dlg h2 { margin: 0; font-size: 1.25rem; }
+  .dlg p, .dlg ol { margin: 0; }
+  .dlg ol { padding-left: 20px; display: grid; gap: 6px; }
+  .dlg .facts { background: var(--surface-2); border-radius: 10px; padding: 10px 14px; font-size: .92rem; display: grid; gap: 4px; }
+  .dlg .warn { border: 1px solid var(--accent); background: var(--accent-soft); border-radius: 10px; padding: 10px 14px; }
+  .dlg .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  a.btn { text-decoration: none; display: inline-block; }
+  .dlg textarea { width: 100%; min-height: 180px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: .8rem/1.4 ui-monospace, Menlo, Consolas, monospace; }
+  .dlg summary { cursor: pointer; color: var(--muted); }
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -148,8 +165,36 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Hospital Radio Song Search</h1>
-  <p class="sub">Every song I've played, which film or musical it's from, and when.</p>
+  <header class="top">
+    <div>
+      <h1>Hospital Radio Song Search</h1>
+      <p class="sub">Every song I've played, which film or musical it's from, and when.</p>
+    </div>
+    <button type="button" class="btn primary" id="suggest" hidden>♫ Suggest Songs</button>
+  </header>
+
+  <dialog id="suggestDlg" aria-labelledby="suggestTitle">
+    <div class="dlg">
+      <h2 id="suggestTitle">Suggest songs for the next show</h2>
+      <div class="facts" id="suggestFacts"></div>
+      <div class="warn" id="suggestWarn" hidden></div>
+      <ol>
+        <li>Press <b>Copy request</b>. It holds your rules and the songs that are free to use.</li>
+        <li>Open Claude (with Google Drive connected) and paste it in.</li>
+        <li>Claude picks the 13 songs and saves them as a new Google Sheet in your Drive.</li>
+      </ol>
+      <div class="actions">
+        <button type="button" class="btn primary" id="copyReq">Copy request</button>
+        <a class="btn" href="https://claude.ai/new" target="_blank" rel="noopener">Open Claude ↗</a>
+        <button type="button" class="btn" id="closeDlg">Close</button>
+        <span id="copyMsg" role="status"></span>
+      </div>
+      <details>
+        <summary>Preview the request</summary>
+        <textarea id="reqText" readonly aria-label="The request to paste into Claude"></textarea>
+      </details>
+    </div>
+  </dialog>
 
   <div id="app" hidden>
     <div class="stats" id="stats" aria-live="polite"></div>
@@ -610,8 +655,117 @@
     if (d.open) openKeys[d.dataset.key] = 1; else delete openKeys[d.dataset.key];
   }, true);
 
+  // ---------- "Suggest Songs": build a request for Claude ----------
+  var UPBEAT = ['happy', 'dance', 'dancing', 'celebration', 'joy', 'fun', 'rock', 'swing', 'jazz', 'boogie', 'rhythm', 'bounce', 'energy', 'anthem', 'fame', 'glory',
+    'freedom', 'winner', 'champion', 'grease', 'mamma mia', 'chicago', 'cabaret', 'hairspray', 'wicked', 'hamilton', 'footloose', 'flashdance', 'saturday night fever',
+    'good morning', 'america', 'popular', 'defying', 'circus', 'razzle', 'stayin', 'one night in bangkok', 'get me to the church', 'luck be a lady', 'mustang',
+    'hungry eyes', 'time of my life', 'loco', 'cups', 'axel f', 'no time to die', 'writing', 'golden eye', 'a view to a kill', 'singin', 'calamity', 'deadwood',
+    'well did you', 'flash bang', 'just leave everything', 'anything you can do'];
+  var SLOW = ['memory', 'alone', 'love', 'heart', 'dream', 'angel', 'beautiful', 'forever', 'miss', 'longing', 'tears', 'sad', 'gentle', 'quiet', 'still', 'wonder',
+    'farewell', 'goodbye', 'somewhere', 'on my own', 'i dreamed', 'phantom', 'all i ask', 'bring him home', 'who am i', 'over the rainbow', 'send in the clowns',
+    'hopelessly', 'devoted', 'wind beneath', 'my heart will go on', 'i will always love', 'beauty and the beast', 'true love', 'stars', 'lara', 'tell me on a sunday',
+    'take that look', 'hello again', 'when you believe', 'electricity', 'sunrise', 'circle of life', 'love changes everything', 'i know him so well',
+    'nobody does it better', 'do you hear the people', 'this is me', 'shallow', 'skyfall', 'chariots', 'dont cry', 'rainbow high', 'moon river', 'mrs robinson',
+    'bright eyes', 'theme from', 'james bond', 'raiders', 'pink panther', 'entertainer', 'dambusters', 'big country', 'superman', 'chitty', 'truly scrumptious'];
+
+  function vibeText(s) { // lower-case, apostrophes dropped, whole words only
+    return ' ' + String(s || '').toLowerCase().replace(/[’'`]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+  }
+  var UP_N = UPBEAT.map(vibeText), SLOW_N = SLOW.map(vibeText);
+  function guessVibe(title, show) {
+    var t = vibeText(title + ' ' + show);
+    var hit = function (k) { return t.indexOf(k) !== -1; };
+    var up = UP_N.filter(hit).length, sl = SLOW_N.filter(hit).length;
+    return up > sl ? 'upbeat' : sl > up ? 'slow' : 'unsure';
+  }
+
+  function ddmmyyyy(d) {
+    return ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear();
+  }
+
+  function buildSuggestion() {
+    // The last 4 shows = the 4 newest date-named tabs
+    var last4 = DATA.broadcasts.filter(function (b) { return b.date; })
+      .sort(function (a, b) { return a.date < b.date ? 1 : -1; }).slice(0, 4);
+    var inLast4 = {};
+    last4.forEach(function (b) { inLast4[b.tab] = 1; });
+
+    var excludedShows = last4.map(function (b) {
+      var songs = [];
+      DATA.songs.forEach(function (s) {
+        s.plays.forEach(function (p) { if (p.tab === b.tab) songs.push({ pos: p.pos, text: s.song + ' (' + s.show + ')' }); });
+      });
+      songs.sort(function (a, c) { return a.pos - c.pos; });
+      return b.tab + ': ' + songs.map(function (x) { return x.text; }).join('; ');
+    });
+
+    var pool = DATA.songs.filter(function (s) { return !s.plays.some(function (p) { return inLast4[p.tab]; }); })
+      .map(function (s) { return { song: s.song, show: s.show, year: (s.meta.year || '').slice(0, 40), vibe: guessVibe(s.song, s.show) }; })
+      .sort(function (a, b) { return norm(a.show) < norm(b.show) ? -1 : norm(a.show) > norm(b.show) ? 1 : norm(a.song) < norm(b.song) ? -1 : 1; });
+
+    var count = { upbeat: 0, slow: 0, unsure: 0 };
+    pool.forEach(function (p) { count[p.vibe]++; });
+
+    var text = [
+      'Please suggest a playlist for my next hospital radio show from the songs below.',
+      '',
+      'Choose the songs yourself using your own judgment (do not write code or call an API to pick them). Rules:',
+      '- Exactly 13 songs. Never more, never fewer.',
+      '- Only use songs from the "Available songs" list. Nothing from the last 4 shows (listed below) may appear. No duplicates.',
+      '- Target about 7 upbeat and 6 slow, adjusted slightly for flow.',
+      '- Order for variety: avoid two songs of the same vibe in a row where possible.',
+      '- Open with a strong, recognisable upbeat track. Close on an upbeat crowd favourite.',
+      '- Aim for variety of eras and shows, and avoid clustering songs from the same musical or film.',
+      '- Songs marked "unsure" had no clear vibe from their keywords, so use your own judgment for them.',
+      '- No source citations. Keep each reason to one short sentence.',
+      '',
+      'Then use Google Drive create_file to create a new Google Sheet (CSV content, contentMimeType text/csv) titled',
+      '"Hospital Radio Playlist Suggestion - ' + ddmmyyyy(new Date()) + '" with the columns: Position,Title,Show,Vibe,Notes',
+      '(Notes = the one-sentence reason). Below the 13 rows add a blank line, a one-line summary of the playlist, another blank line,',
+      'then "Excluded (last 4 shows):" followed by one line per excluded show with its songs. Finally give me the sheet link and the playlist as a table here.',
+      'If fewer than 13 songs are available, tell me and suggest relaxing the exclusion to the last 3 shows before continuing.',
+      '',
+      'Last 4 shows (excluded):',
+      excludedShows.join('\n'),
+      '',
+      'Available songs (' + pool.length + ') - Title | Show | Vibe | Year:',
+      pool.map(function (p) { return p.song + ' | ' + p.show + ' | ' + p.vibe + (p.year ? ' | ' + p.year : ''); }).join('\n')
+    ].join('\n');
+
+    return { last4: last4, excludedCount: DATA.songs.length - pool.length, pool: pool, count: count, text: text };
+  }
+
+  var suggestion = null;
+  $('suggest').addEventListener('click', function () {
+    suggestion = buildSuggestion();
+    var s = suggestion;
+    $('suggestFacts').innerHTML =
+      '<div><b>Excluded (last 4 shows):</b> ' + (s.last4.length ? s.last4.map(function (b) { return esc(fmtDate(b.date)); }).join(', ') : 'none found') + '</div>' +
+      '<div><b>' + s.excludedCount + '</b> songs excluded · <b>' + s.pool.length + '</b> available (' +
+      s.count.upbeat + ' upbeat · ' + s.count.slow + ' slow · ' + s.count.unsure + ' unsure)</div>';
+    var warn = $('suggestWarn');
+    warn.hidden = s.pool.length >= 13;
+    warn.textContent = s.pool.length >= 13 ? '' : 'Only ' + s.pool.length + ' songs are free to use, which is fewer than 13. Claude will tell you and suggest relaxing the exclusion to the last 3 shows.';
+    $('reqText').value = s.text;
+    $('copyMsg').textContent = '';
+    $('copyReq').textContent = 'Copy request';
+    var dlg = $('suggestDlg');
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  });
+  $('closeDlg').addEventListener('click', function () { $('suggestDlg').close(); });
+  $('copyReq').addEventListener('click', async function () {
+    var ok = false;
+    try { await navigator.clipboard.writeText(suggestion.text); ok = true; } catch (e) {
+      try { var ta = $('reqText'); ta.parentNode.open = true; ta.select(); ok = document.execCommand('copy'); } catch (e2) { /* fall through */ }
+    }
+    $('copyReq').textContent = ok ? 'Copied ✓' : 'Copy request';
+    $('copyMsg').textContent = ok ? 'Now paste it into Claude.' : 'Couldn’t copy automatically. Select the text in the preview and copy it.';
+    if (!ok) $('reqText').parentNode.open = true;
+  });
+
   async function load() {
     $('foot').hidden = true;
+    $('suggest').hidden = true;
     if (!CFG.API_KEY) { setupHelp(); return; }
     showStatus('Loading your playlists…');
     try {
@@ -628,6 +782,7 @@
     $('app').hidden = false;
     initControls();
     render();
+    $('suggest').hidden = false;
     $('loaded').textContent = 'Loaded ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) +
       ' · ' + plural(DATA.broadcasts.length, 'show', 'shows') + ' read from the sheet';
     $('foot').hidden = false;
