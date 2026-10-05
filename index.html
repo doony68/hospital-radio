@@ -3,30 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hospital Radio Song Search</title>
+<title>Northern Air - Search</title>
 <style>
   :root {
-    --bg: #f6f4ef;
+    --bg: #f2f7fc;
     --surface: #ffffff;
-    --surface-2: #efece4;
-    --text: #1f2430;
-    --muted: #667085;
-    --line: #e1ddd2;
-    --accent: #b4402f;
-    --accent-soft: #f6e3df;
+    --surface-2: #e6f0fa;
+    --text: #1b2733;
+    --muted: #55677a;
+    --line: #d3e1ee;
+    --accent: #3a96d4;          /* light blue: chart bars, hover outlines */
+    --chip-bg: #cfe6f8;         /* light blue: date pills, tags */
+    --chip-edge: #8fc2ea;
+    --chip-text: #12202e;
+    --primary: #1d4f91;         /* darker blue: primary buttons, selected buttons, links */
+    --primary-text: #ffffff;
+    --link: #1d4f91;
+    --danger: #b4402f;          /* errors and warnings stay red */
+    --danger-soft: #f6e3df;
     --focus: #1d5fd1;
-    --shadow: 0 1px 2px rgba(31, 36, 48, .06);
+    --shadow: 0 1px 2px rgba(27, 39, 51, .06);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #15171c;
-      --surface: #1d2027;
-      --surface-2: #262a33;
-      --text: #eceef2;
-      --muted: #9aa3b2;
-      --line: #313644;
-      --accent: #ef8b78;
-      --accent-soft: #3a2420;
+      --bg: #0f1822;
+      --surface: #17222f;
+      --surface-2: #1f2d3d;
+      --text: #e8eef5;
+      --muted: #9db0c3;
+      --line: #2b3b4e;
+      --accent: #5aaee6;
+      --primary: #2f6fc4;
+      --link: #8fc3f0;
+      --danger: #ef8b78;
+      --danger-soft: #3a2420;
       --focus: #7aa7ff;
       --shadow: none;
     }
@@ -43,9 +53,8 @@
   .top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
   h1 { font-size: 1.6rem; margin: 0 0 4px; letter-spacing: -.01em; }
   .sub { color: var(--muted); margin: 0; }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; padding: 9px 18px; }
+  .btn.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-text); font-weight: 600; padding: 9px 18px; }
   .btn.primary:hover { filter: brightness(1.1); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #1a1210; } }
 
   dialog { width: min(720px,calc(100vw - 32px)); max-height: calc(100vh - 32px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 14px; padding: 0; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
   dialog::backdrop { background: rgba(0,0,0,.45); }
@@ -58,10 +67,10 @@
   .plist .n { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
   .plist .what { display: grid; overflow-wrap: anywhere; }
   .plist .vibe { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
-  .plist .vibe.upbeat { background: var(--accent-soft); color: var(--text); }
+  .plist .vibe.upbeat { background: var(--chip-bg); color: var(--chip-text); }
   .plist .why { grid-column: 2 / -1; color: var(--muted); font-size: .85rem; }
   .dlg .facts { background: var(--surface-2); border-radius: 10px; padding: 10px 14px; font-size: .92rem; display: grid; gap: 4px; }
-  .dlg .warn { border: 1px solid var(--accent); background: var(--accent-soft); border-radius: 10px; padding: 10px 14px; }
+  .dlg .warn { border: 1px solid var(--danger); background: var(--danger-soft); border-radius: 10px; padding: 10px 14px; }
   .dlg .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   a.btn { text-decoration: none; display: inline-block; }
   .dlg .warn .btn { margin-left: 6px; }
@@ -90,8 +99,7 @@
     padding: 7px 13px; font: inherit; font-size: .9rem; cursor: pointer;
   }
   .btn:hover { border-color: var(--accent); }
-  .btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn[aria-pressed="true"] { color: #1a1210; } }
+  .btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-text); }
 
   .viewbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
   .summary { color: var(--muted); font-size: .92rem; }
@@ -115,15 +123,15 @@
   .plays { font-weight: 700; font-variant-numeric: tabular-nums; }
   .plays small { display: none; font-weight: 400; color: var(--muted); }
   .chips { display: flex; flex-wrap: wrap; gap: 4px; }
-  .chip { background: var(--accent-soft); color: var(--text); border-radius: 6px; padding: 1px 7px; font-size: .82rem; white-space: nowrap; }
+  .chip { background: var(--chip-bg); color: var(--chip-text); box-shadow: inset 0 0 0 1px var(--chip-edge); border-radius: 6px; padding: 1px 7px; font-size: .82rem; white-space: nowrap; }
   button.chip { border: 0; font-family: inherit; cursor: pointer; }
   button.chip:hover { outline: 2px solid var(--accent); }
   .chip.more { background: none; color: var(--muted); }
   .dates select { background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font: inherit; padding: 8px 10px; }
   .pills { display: flex; flex-wrap: wrap; gap: 8px; }
   .pills:empty { display: none; }
-  .pill { background: var(--accent-soft); border: 1px solid var(--accent); color: var(--text); border-radius: 999px; padding: 4px 6px 4px 12px; font: inherit; font-size: .9rem; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
-  .pill i { font-style: normal; font-size: 1.1rem; line-height: 1; color: var(--muted); padding: 0 4px; }
+  .pill { background: var(--chip-bg); border: 1px solid var(--chip-edge); color: var(--chip-text); border-radius: 999px; padding: 4px 6px 4px 12px; font: inherit; font-size: .9rem; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+  .pill i { font-style: normal; font-size: 1.1rem; line-height: 1; color: var(--chip-text); padding: 0 4px; }
 
   .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 16px; }
   .chart > summary { cursor: pointer; padding: 12px 14px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
@@ -151,11 +159,11 @@
   .sub-song .plays { text-align: right; }
 
   .msg { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
-  .msg.error { border-color: var(--accent); }
+  .msg.error { border-color: var(--danger); }
   .msg code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
   .empty { padding: 28px 14px; text-align: center; color: var(--muted); }
   footer { margin-top: 18px; color: var(--muted); font-size: .85rem; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-  footer button { all: unset; color: var(--accent); cursor: pointer; text-decoration: underline; }
+  footer button { all: unset; color: var(--link); cursor: pointer; text-decoration: underline; }
 
   @media (max-width: 720px) {
     .stats { grid-template-columns: repeat(2, 1fr); }
@@ -178,7 +186,7 @@
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>Hospital Radio Song Search</h1>
+      <h1>Northern Air - Search</h1>
       <p class="sub">Every song I've played, which film or musical it's from, and when.</p>
     </div>
     <button type="button" class="btn primary" id="suggest" hidden>♫ Suggest Songs</button>
@@ -724,8 +732,9 @@
 
   // Picks 13 songs: upbeat on odd positions (7), slow on even (6), so no two neighbours share a vibe.
   // Opens and closes with well-known upbeat songs; spreads shows and eras. Randomised so "Suggest again" differs.
-  function pickPlaylist(pool) {
+  function pickPlaylist(pool, seen) {
     var N = 13, chosen = new Array(N), taken = {}, showUse = {}, eraUse = {};
+    var minSeen = Math.min.apply(null, pool.map(function (c) { return seen[c.key] || 0; }));
     var order = [0, N - 1];
     for (var i = 1; i < N - 1; i++) order.push(i);
 
@@ -735,10 +744,11 @@
       var best = null, bestScore = -Infinity;
       pool.forEach(function (c) {
         if (taken[c.key]) return;
-        var score = Math.random() * (ends ? 1 : 1.5);
+        var score = Math.random() * (ends ? 2 : 2.5);
+        score -= 6 * Math.min(3, (seen[c.key] || 0) - minSeen); // songs from earlier suggestions go to the back of the queue (capped so the vibe rule still wins)
         if (c.vibe === want) score += 0;
         else if (c.vibe === 'unsure') score -= 0.3;
-        else score -= 5; // wrong vibe: only if nothing else is left
+        else score -= 100; // wrong vibe: only if nothing else is left, whatever the other penalties add up to
         if (ends) score += Math.log(1 + c.plays) * 2; // well-known = played often
         else score += Math.min(1, monthsSince(c.last) / 12) * 0.8; // rested for a while
         score -= 4 * (showUse[c.show] || 0);
@@ -782,14 +792,17 @@
     return rows.join('\n');
   }
 
-  var suggestion = null, excludeN = 4;
+  var suggestion = null, excludeN = 4, seen = {}, round = 0, prevKeys = null;
 
-  function showSuggestion() {
+  // again = true re-runs the choice, steering away from songs already suggested; false starts afresh
+  function showSuggestion(again) {
+    if (!again) { seen = {}; round = 0; prevKeys = null; }
     var b = buildPool(excludeN);
     var warn = $('suggestWarn'), list = $('suggestList'), enough = b.pool.length >= 13;
-    $('suggestFacts').innerHTML =
+    var factsHtml =
       '<div><b>Excluded (last ' + excludeN + ' shows):</b> ' + (b.last.length ? b.last.map(function (x) { return esc(fmtDate(x.date)); }).join(', ') : 'none') + '</div>' +
       '<div><b>' + b.excludedCount + '</b> songs excluded · <b>' + b.pool.length + '</b> available to choose from</div>';
+    $('suggestFacts').innerHTML = factsHtml;
 
     $('saveCsv').disabled = $('again').disabled = !enough;
     warn.hidden = enough;
@@ -801,7 +814,12 @@
       return;
     }
 
-    var picks = pickPlaylist(b.pool);
+    var picks = pickPlaylist(b.pool, seen);
+    round++;
+    var fresh = prevKeys ? picks.filter(function (p) { return !prevKeys[p.key]; }).length : picks.length;
+    prevKeys = {};
+    picks.forEach(function (p) { seen[p.key] = (seen[p.key] || 0) + 1; prevKeys[p.key] = 1; });
+    if (round > 1) $('suggestFacts').innerHTML = factsHtml + '<div>Suggestion ' + round + ': <b>' + fresh + '</b> of ' + picks.length + ' songs are new compared with the last one</div>';
     suggestion = { picks: picks, excludedShows: b.excludedShows, excludeN: excludeN };
     list.innerHTML = picks.map(function (p, i) {
       return '<li><span class="n">' + (i + 1) + '</span><span class="what"><b>' + esc(p.song) + '</b><span class="film">' + esc(p.show) + '</span></span>' +
@@ -811,14 +829,14 @@
 
   $('suggest').addEventListener('click', function () {
     excludeN = 4;
-    showSuggestion();
+    showSuggestion(false);
     var dlg = $('suggestDlg');
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
   });
-  $('again').addEventListener('click', showSuggestion);
+  $('again').addEventListener('click', function () { showSuggestion(true); });
   $('suggestWarn').addEventListener('click', function (e) {
     var b = e.target.closest('[data-excl]'); if (!b) return;
-    excludeN = +b.dataset.excl; showSuggestion();
+    excludeN = +b.dataset.excl; showSuggestion(false);
   });
   $('closeDlg').addEventListener('click', function () { $('suggestDlg').close(); });
   $('saveCsv').addEventListener('click', function () {

@@ -1,4 +1,4 @@
-# Hospital Radio Song Search – setup
+# Northern Air - Search: setup
 
 `index.html` is a web page that reads your "Playlists" Google Sheet live and lets you:
 
@@ -19,7 +19,7 @@ Press **Suggest Songs** and a window opens with a 13-song playlist for your next
 - **Upbeat / slow:** each song is tagged from keywords in its title and show name. Songs with no keyword match are given whichever vibe the running order needs, and marked "(vibe is a guess)".
 - **Running order:** 7 upbeat and 6 slow, alternating, so no two neighbours share a vibe. It opens with a well-known upbeat song and closes with an upbeat crowd favourite. "Well-known" and "favourite" mean songs you've played most often.
 - **Variety:** it avoids repeating a show or an era, and prefers songs that haven't been played for a while.
-- **Suggest again** gives a different playlist. **Save as CSV** downloads it with Position, Title, Show, Vibe and Notes columns, a summary line and the list of excluded songs. Open the file in Google Sheets with File → Import.
+- **Suggest again** re-runs the choice and steers away from songs it has already suggested, so you get a genuinely different set (the window shows how many songs are new). If the pool is small, some repeats are unavoidable. **Save as CSV** downloads it with Position, Title, Show, Vibe and Notes columns, a summary line and the list of excluded songs. Open the file in Google Sheets with File → Import.
 - If fewer than 13 songs are free to use, the window says so and offers to exclude one show fewer.
 
 The picking is done by a formula on the page, so it's a good starting point rather than a hand-made running order.
