@@ -9,6 +9,19 @@
 - find songs you haven't played lately with **Not played in the last…** (1, 3, 6 or 12 months)
 - see a **Most played** chart of the top 10 (click a bar to search for it); it follows your filters
 - switch to a "Shows & films" view to see how often each one has been played
+- press **Suggest Songs** to plan your next show (see below)
+
+## Suggest Songs
+
+The page can't create Google Sheets or choose songs by itself, so the button hands the job to Claude:
+
+1. Press **Suggest Songs**. The page works out the last 4 shows (the 4 newest date-named tabs) and every
+   song that was *not* played in them, and tags each as upbeat, slow or unsure from keywords in the title and show name.
+2. Press **Copy request**, open Claude (with Google Drive connected) and paste it in.
+3. Claude picks exactly 13 songs by its own judgment (about 7 upbeat and 6 slow, alternating, opening and closing
+   on upbeat favourites, mixing eras and shows) and saves them as a new Google Sheet in your Drive.
+
+The request includes all your rules, so there's nothing else to type. If fewer than 13 songs are free to use, the page warns you.
 
 New tabs you add to the sheet appear automatically (tabs named like `06-10-2026`, day-month-year).
 
