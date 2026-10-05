@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hospital Radio Song Search</title>
+<style>
+  :root {
+    --bg: #f6f4ef;
+    --surface: #ffffff;
+    --surface-2: #efece4;
+    --text: #1f2430;
+    --muted: #667085;
+    --line: #e1ddd2;
+    --accent: #b4402f;
+    --accent-soft: #f6e3df;
+    --focus: #1d5fd1;
+    --shadow: 0 1px 2px rgba(31, 36, 48, .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15171c;
+      --surface: #1d2027;
+      --surface-2: #262a33;
+      --text: #eceef2;
+      --muted: #9aa3b2;
+      --line: #313644;
+      --accent: #ef8b78;
+      --accent-soft: #3a2420;
+      --focus: #7aa7ff;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow); }
+  .stat b { display: block; font-size: 1.6rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--muted); font-size: .85rem; }
+
+  .controls { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); display: grid; gap: 12px; margin-bottom: 16px; }
+  .search { position: relative; }
+  .search input { width: 100%; padding: 12px 40px 12px 14px; font-size: 1rem; }
+  .search button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; padding: 4px 8px; }
+  input[type="search"], input[type="date"] {
+    background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font: inherit;
+  }
+  input[type="date"] { padding: 8px 10px; }
+  .dates { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  .dates label { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .btn {
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 13px; font: inherit; font-size: .9rem; cursor: pointer;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn[aria-pressed="true"] { color: #1a1210; } }
+
+  .viewbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .summary { color: var(--muted); font-size: .92rem; }
+
+  .list { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+  .head, summary.row {
+    display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 2fr) 70px minmax(0, 2.4fr); gap: 12px; align-items: start; padding: 11px 14px;
+  }
+  .head { background: var(--surface-2); border-bottom: 1px solid var(--line); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .head button { all: unset; cursor: pointer; font: inherit; }
+  .head button:hover, .head button[aria-sort] { color: var(--text); }
+  .head button[aria-sort="ascending"]::after { content: " ▲"; font-size: .7em; }
+  .head button[aria-sort="descending"]::after { content: " ▼"; font-size: .7em; }
+  details { border-bottom: 1px solid var(--line); }
+  details:last-child { border-bottom: 0; }
+  summary.row { cursor: pointer; list-style: none; }
+  summary.row::-webkit-details-marker { display: none; }
+  summary.row:hover { background: var(--surface-2); }
+  .song { font-weight: 600; overflow-wrap: anywhere; }
+  .film { color: var(--muted); overflow-wrap: anywhere; }
+  .plays { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .plays small { display: none; font-weight: 400; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .chip { background: var(--accent-soft); color: var(--text); border-radius: 6px; padding: 1px 7px; font-size: .82rem; white-space: nowrap; }
+  .chip.more { background: none; color: var(--muted); }
+  details[open] .chip.more { display: none; }
+  .detail { padding: 4px 14px 16px; display: grid; gap: 8px; background: var(--surface-2); border-top: 1px solid var(--line); }
+  .detail dl { margin: 0; display: grid; grid-template-columns: 150px 1fr; gap: 6px 12px; }
+  .detail dt { color: var(--muted); font-size: .88rem; }
+  .detail dd { margin: 0; overflow-wrap: anywhere; }
+  .detail h3 { margin: 10px 0 0; font-size: .85rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .sub-songs { display: grid; gap: 6px; }
+  .sub-songs div { display: grid; grid-template-columns: minmax(0, 1fr) 60px; gap: 12px; }
+
+  .msg { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .msg.error { border-color: var(--accent); }
+  .msg code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+  .empty { padding: 28px 14px; text-align: center; color: var(--muted); }
+  footer { margin-top: 18px; color: var(--muted); font-size: .85rem; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  footer button { all: unset; color: var(--accent); cursor: pointer; text-decoration: underline; }
+
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .head { display: none; }
+    summary.row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; }
+    summary.row .song { grid-column: 1; }
+    summary.row .plays { grid-column: 2; grid-row: 1 / span 2; text-align: right; }
+    summary.row .plays small { display: block; }
+    summary.row .film { grid-column: 1; }
+    summary.row .chips { grid-column: 1 / -1; }
+    .detail dl { grid-template-columns: 1fr; gap: 0; }
+    .detail dt { margin-top: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Hospital Radio Song Search</h1>
+  <p class="sub">Every song I've played, which film or musical it's from, and when.</p>
+
+  <div id="app" hidden>
+    <div class="stats" id="stats" aria-live="polite"></div>
+
+    <div class="controls">
+      <div class="search">
+        <input type="search" id="q" placeholder="Search songs or shows…" aria-label="Search for a song or a show or film" autocomplete="off">
+        <button type="button" id="clear" aria-label="Clear search" hidden>×</button>
+      </div>
+      <div class="dates">
+        <label>From <input type="date" id="from"></label>
+        <label>To <input type="date" id="to"></label>
+        <div class="presets" id="presets" role="group" aria-label="Quick date ranges"></div>
+      </div>
+    </div>
+
+    <div class="viewbar">
+      <div class="presets" id="views" role="group" aria-label="View"></div>
+      <div class="summary" id="summary" aria-live="polite"></div>
+    </div>
+
+    <div id="results"></div>
+  </div>
+
+  <div id="status" class="msg" role="status">Loading your playlists…</div>
+
+  <footer id="foot" hidden>
+    <span id="loaded"></span>
+    <button type="button" id="refresh">Refresh from Google Sheets</button>
+  </footer>
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var CFG = window.RADIO_CONFIG || {};
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---------- helpers ----------
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function norm(s) {
+    return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+      .replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+  function isoFromTab(title) {
+    var m = /^\s*(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})\s*$/.exec(title);
+    if (!m) return null;
+    var d = +m[1], mo = +m[2], y = +m[3];
+    if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    return y + '-' + ('0' + mo).slice(-2) + '-' + ('0' + d).slice(-2);
+  }
+  function fmtDate(iso) {
+    var p = iso.split('-');
+    return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  function isoToday() {
+    var d = new Date();
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+  function isoShift(iso, months) {
+    var p = iso.split('-');
+    var d = new Date(+p[0], +p[1] - 1 - months, +p[2]);
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+
+  // ---------- loading ----------
+  function showStatus(html, isError) {
+    var el = $('status');
+    el.hidden = false;
+    el.className = 'msg' + (isError ? ' error' : '');
+    el.innerHTML = html;
+  }
+
+  function setupHelp() {
+    showStatus(
+      '<strong>One-off setup needed</strong>' +
+      '<p>The dashboard needs a Google API key to read your sheet. Add it to <code>config.js</code> ' +
+      '(the <code>API_KEY</code> line) and make sure the sheet is shared as ' +
+      '<em>Anyone with the link can view</em>.</p>' +
+      '<p>Step-by-step instructions are in <code>DASHBOARD.md</code>.</p>', true);
+  }
+
+  async function fetchSheets() {
+    var url = 'https://sheets.googleapis.com/v4/spreadsheets/' + encodeURIComponent(CFG.SHEET_ID) +
+      '?includeGridData=true&fields=sheets(properties.title,data.rowData.values.formattedValue)' +
+      '&key=' + encodeURIComponent(CFG.API_KEY);
+    var res = await fetch(url);
+    if (!res.ok) {
+      var detail = '';
+      try { detail = (await res.json()).error.message; } catch (e) { /* ignore */ }
+      var err = new Error(detail || ('HTTP ' + res.status));
+      err.status = res.status;
+      throw err;
+    }
+    return (await res.json()).sheets || [];
+  }
+
+  var COLS = [
+    ['song', ['song', 'title', 'track']],
+    ['show', ['show', 'film', 'movie', 'musical']],
+    ['year', ['year']],
+    ['filmStars', ['film star', 'lead film']],
+    ['stageStars', ['stage star', 'lead stage']],
+    ['composer', ['composer', 'lyricist']],
+    ['genre', ['genre']],
+    ['synopsis', ['synopsis']],
+    ['facts', ['fact']],
+    ['chart', ['chart']]
+  ];
+
+  function mapColumns(headerCells) {
+    var header = headerCells.map(norm), idx = {}, used = {};
+    COLS.forEach(function (c) {
+      var i = header.indexOf(c[0]); // exact header first
+      if (i < 0) {
+        for (var k = 0; k < header.length && i < 0; k++) {
+          if (used[k]) continue;
+          for (var w = 0; w < c[1].length; w++) {
+            if (header[k].indexOf(c[1][w]) !== -1) { i = k; break; }
+          }
+        }
+      }
+      if (i >= 0) { idx[c[0]] = i; used[i] = true; }
+    });
+    return idx;
+  }
+
+  function buildData(sheets) {
+    var songs = {}, broadcasts = [];
+    sheets.forEach(function (sheet) {
+      var title = sheet.properties.title;
+      var rows = ((sheet.data && sheet.data[0] && sheet.data[0].rowData) || []).map(function (r) {
+        return (r.values || []).map(function (c) { return (c.formattedValue || '').trim(); });
+      });
+      if (!rows.length) return;
+      var idx = mapColumns(rows[0]), start = 1;
+      if (idx.song == null || idx.show == null) { idx = { song: 0, show: 1, year: 2, filmStars: 3, stageStars: 4, composer: 5, genre: 6, synopsis: 7, facts: 8, chart: 9 }; start = 0; }
+      var date = isoFromTab(title), count = 0;
+      for (var r = start; r < rows.length; r++) {
+        var row = rows[r], song = row[idx.song] || '', show = row[idx.show] || '';
+        if (!song || norm(song) === 'song') continue;
+        var key = norm(song) + '|' + norm(show);
+        var s = songs[key] || (songs[key] = { key: key, song: song, show: show, plays: [], meta: {}, hay: norm(song + ' ' + show) });
+        s.plays.push({ date: date, tab: title });
+        count++;
+        ['year', 'filmStars', 'stageStars', 'composer', 'genre', 'synopsis', 'facts', 'chart'].forEach(function (f) {
+          var v = idx[f] != null ? row[idx[f]] : '';
+          if (v && v.toUpperCase() !== 'N/A') s.meta[f] = v; // later tabs win
+        });
+      }
+      if (count) broadcasts.push({ tab: title, date: date });
+    });
+    var list = Object.keys(songs).map(function (k) { return songs[k]; });
+    var dates = broadcasts.map(function (b) { return b.date; }).filter(Boolean).sort();
+    return { songs: list, broadcasts: broadcasts, minDate: dates[0] || '', maxDate: dates[dates.length - 1] || '' };
+  }
+
+  // ---------- state & filtering ----------
+  var DATA = null;
+  var state = { view: 'songs', q: '', from: '', to: '', sort: { songs: { k: 'plays', d: -1 }, shows: { k: 'plays', d: -1 } } };
+  var openKeys = {};
+
+  function inRange(p) {
+    if (!state.from && !state.to) return true;
+    if (!p.date) return false;
+    return !(state.from && p.date < state.from) && !(state.to && p.date > state.to);
+  }
+  function latest(plays) {
+    var d = plays.map(function (p) { return p.date; }).filter(Boolean).sort();
+    return d.length ? d[d.length - 1] : '';
+  }
+
+  function compute() {
+    var words = norm(state.q).split(' ').filter(Boolean);
+    var songs = [];
+    DATA.songs.forEach(function (s) {
+      if (!words.every(function (w) { return s.hay.indexOf(w) !== -1; })) return;
+      var plays = s.plays.filter(inRange);
+      if (!plays.length) return;
+      songs.push({ key: s.key, song: s.song, show: s.show, meta: s.meta, plays: plays, last: latest(plays) });
+    });
+
+    var showMap = {};
+    songs.forEach(function (s) {
+      var k = norm(s.show) || '(none)';
+      var sh = showMap[k] || (showMap[k] = { key: k, show: s.show || '(no show listed)', songs: [], plays: [] });
+      sh.songs.push(s);
+      sh.plays = sh.plays.concat(s.plays);
+    });
+    var shows = Object.keys(showMap).map(function (k) {
+      var sh = showMap[k]; sh.last = latest(sh.plays); return sh;
+    });
+
+    var tabs = {};
+    songs.forEach(function (s) { s.plays.forEach(function (p) { tabs[p.tab] = 1; }); });
+    var totalPlays = songs.reduce(function (n, s) { return n + s.plays.length; }, 0);
+    return { songs: songs, shows: shows, broadcasts: Object.keys(tabs).length, totalPlays: totalPlays };
+  }
+
+  function sortRows(rows, view) {
+    var st = state.sort[view], d = st.d;
+    var by = {
+      song: function (r) { return norm(r.song); },
+      show: function (r) { return norm(r.show); },
+      plays: function (r) { return r.plays.length; },
+      count: function (r) { return r.songs ? r.songs.length : 0; },
+      last: function (r) { return r.last; }
+    }[st.k];
+    return rows.slice().sort(function (a, b) {
+      var x = by(a), y = by(b);
+      if (x < y) return -d; if (x > y) return d;
+      return norm(a.song || a.show) < norm(b.song || b.show) ? -1 : 1;
+    });
+  }
+
+  // ---------- rendering ----------
+  function datesHtml(plays, max) {
+    var sorted = plays.slice().sort(function (a, b) { return (b.date || b.tab) < (a.date || a.tab) ? -1 : 1; });
+    var shown = max ? sorted.slice(0, max) : sorted;
+    var html = shown.map(function (p) {
+      return '<span class="chip">' + esc(p.date ? fmtDate(p.date) : p.tab) + '</span>';
+    }).join('');
+    if (max && sorted.length > max) html += '<span class="chip more">+' + (sorted.length - max) + ' more</span>';
+    return '<div class="chips">' + html + '</div>';
+  }
+
+  var FIELDS = [
+    ['year', 'Year released'], ['filmStars', 'Lead film stars'], ['stageStars', 'Lead stage stars'],
+    ['composer', 'Composer / lyricist'], ['genre', 'Genre'], ['synopsis', 'Synopsis'],
+    ['facts', 'Interesting facts'], ['chart', 'UK chart info']
+  ];
+  function metaHtml(meta) {
+    var rows = FIELDS.filter(function (f) { return meta[f[0]]; }).map(function (f) {
+      return '<dt>' + f[1] + '</dt><dd>' + esc(meta[f[0]]) + '</dd>';
+    }).join('');
+    return rows ? '<dl>' + rows + '</dl>' : '';
+  }
+
+  function head(cols, view) {
+    var st = state.sort[view];
+    return '<div class="head">' + cols.map(function (c) {
+      var sorted = st.k === c[0] ? (st.d === 1 ? 'ascending' : 'descending') : '';
+      return '<span>' + (c[0] ? '<button type="button" data-sort="' + c[0] + '"' + (sorted ? ' aria-sort="' + sorted + '"' : '') + '>' + c[1] + '</button>' : c[1]) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  function renderSongs(c) {
+    var rows = sortRows(c.songs, 'songs');
+    var html = head([['song', 'Song'], ['show', 'Show / film'], ['plays', 'Played'], ['', 'Played on']], 'songs');
+    html += rows.map(function (s) {
+      var n = s.plays.length;
+      return '<details data-key="' + esc(s.key) + '"' + (openKeys[s.key] ? ' open' : '') + '>' +
+        '<summary class="row"><span class="song">' + esc(s.song) + '</span>' +
+        '<span class="film">' + esc(s.show) + '</span>' +
+        '<span class="plays">' + n + '<small>' + (n === 1 ? 'time' : 'times') + '</small></span>' +
+        datesHtml(s.plays, 4) + '</summary>' +
+        '<div class="detail">' + (n > 4 ? '<h3>All dates played</h3>' + datesHtml(s.plays, 0) : '') + metaHtml(s.meta) + '</div></details>';
+    }).join('');
+    return html;
+  }
+
+  function renderShows(c) {
+    var rows = sortRows(c.shows, 'shows');
+    var html = head([['show', 'Show / film'], ['count', 'Songs'], ['plays', 'Played'], ['', 'Last played']], 'shows');
+    html += rows.map(function (sh) {
+      var songs = sh.songs.slice().sort(function (a, b) { return b.plays.length - a.plays.length || (norm(a.song) < norm(b.song) ? -1 : 1); });
+      return '<details data-key="show:' + esc(sh.key) + '"' + (openKeys['show:' + sh.key] ? ' open' : '') + '>' +
+        '<summary class="row"><span class="song">' + esc(sh.show) + '</span>' +
+        '<span class="film">' + plural(sh.songs.length, 'song', 'songs') + '</span>' +
+        '<span class="plays">' + sh.plays.length + '<small>' + (sh.plays.length === 1 ? 'time' : 'times') + '</small></span>' +
+        '<span class="film">' + (sh.last ? fmtDate(sh.last) : '') + '</span></summary>' +
+        '<div class="detail"><h3>Songs played</h3><div class="sub-songs">' +
+        songs.map(function (s) {
+          return '<div><span>' + esc(s.song) + '</span><span class="plays">' + s.plays.length + '×</span></div>';
+        }).join('') + '</div></div></details>';
+    }).join('');
+    return html;
+  }
+
+  function render() {
+    var c = compute();
+    $('stats').innerHTML = [
+      [c.broadcasts, 'Shows broadcast'], [c.totalPlays, 'Songs played'],
+      [c.songs.length, 'Different songs'], [c.shows.length, 'Films & musicals']
+    ].map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
+
+    var rangeTxt = '';
+    if (state.from || state.to) {
+      rangeTxt = ' between ' + (state.from ? fmtDate(state.from) : 'the start') + ' and ' + (state.to ? fmtDate(state.to) : 'today');
+    }
+    var rows = state.view === 'songs' ? c.songs : c.shows;
+    $('summary').textContent = state.view === 'songs'
+      ? plural(c.songs.length, 'song', 'songs') + ' · ' + plural(c.totalPlays, 'play', 'plays') + rangeTxt
+      : plural(c.shows.length, 'film or musical', 'films & musicals') + ' · ' + plural(c.totalPlays, 'play', 'plays') + rangeTxt;
+
+    $('results').innerHTML = rows.length
+      ? '<div class="list">' + (state.view === 'songs' ? renderSongs(c) : renderShows(c)) + '</div>'
+      : '<div class="list"><div class="empty">Nothing found' + (state.q ? ' for “' + esc(state.q) + '”' : '') + rangeTxt + '. Try a different search or widen the dates.</div></div>';
+
+    $('clear').hidden = !state.q;
+    Array.prototype.forEach.call($('presets').children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.from === state.from && b.dataset.to === state.to)); });
+    Array.prototype.forEach.call($('views').children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === state.view)); });
+  }
+
+  // ---------- wiring ----------
+  function initControls() {
+    var today = isoToday();
+    var year = today.slice(0, 4);
+    var presets = [
+      ['All time', '', ''],
+      ['Last 3 months', isoShift(today, 3), ''],
+      ['Last 12 months', isoShift(today, 12), ''],
+      ['This year', year + '-01-01', '']
+    ];
+    $('presets').innerHTML = presets.map(function (p) {
+      return '<button type="button" class="btn" data-from="' + p[1] + '" data-to="' + p[2] + '">' + p[0] + '</button>';
+    }).join('');
+    $('views').innerHTML = '<button type="button" class="btn" data-view="songs">Songs</button>' +
+      '<button type="button" class="btn" data-view="shows">Shows &amp; films</button>';
+    $('from').min = $('to').min = DATA.minDate;
+    $('from').max = $('to').max = DATA.maxDate > today ? DATA.maxDate : today;
+  }
+
+  var timer;
+  $('q').addEventListener('input', function (e) {
+    clearTimeout(timer);
+    timer = setTimeout(function () { state.q = e.target.value; render(); }, 120);
+  });
+  $('clear').addEventListener('click', function () { $('q').value = ''; state.q = ''; render(); $('q').focus(); });
+  $('from').addEventListener('change', function (e) { state.from = e.target.value; render(); });
+  $('to').addEventListener('change', function (e) { state.to = e.target.value; render(); });
+  $('presets').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    state.from = b.dataset.from; state.to = b.dataset.to;
+    $('from').value = state.from; $('to').value = state.to; render();
+  });
+  $('views').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    state.view = b.dataset.view; render();
+  });
+  $('results').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sort]'); if (!b) return;
+    var st = state.sort[state.view], k = b.dataset.sort;
+    if (st.k === k) st.d = -st.d; else { st.k = k; st.d = (k === 'plays' || k === 'last' || k === 'count') ? -1 : 1; }
+    render();
+  });
+  $('results').addEventListener('toggle', function (e) {
+    var d = e.target; if (d.tagName !== 'DETAILS') return;
+    if (d.open) openKeys[d.dataset.key] = 1; else delete openKeys[d.dataset.key];
+  }, true);
+
+  async function load() {
+    $('foot').hidden = true;
+    if (!CFG.API_KEY) { setupHelp(); return; }
+    showStatus('Loading your playlists…');
+    try {
+      DATA = buildData(await fetchSheets());
+    } catch (err) {
+      var hint = err.status === 403 || err.status === 400 || err.status === 404
+        ? '<p>Check that the sheet is shared as <em>Anyone with the link can view</em> and that the API key in <code>config.js</code> is correct and allowed for this web address.</p>'
+        : '<p>Check your internet connection and try again.</p>';
+      showStatus('<strong>Couldn’t load the sheet.</strong><p>' + esc(err.message) + '</p>' + hint, true);
+      $('app').hidden = true;
+      return;
+    }
+    $('status').hidden = true;
+    $('app').hidden = false;
+    initControls();
+    render();
+    $('loaded').textContent = 'Loaded ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) +
+      ' · ' + plural(DATA.broadcasts.length, 'show', 'shows') + ' read from the sheet';
+    $('foot').hidden = false;
+  }
+  $('refresh').addEventListener('click', load);
+  load();
+})();
+</script>
+</body>
+</html>
