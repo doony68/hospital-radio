@@ -47,18 +47,25 @@
   .btn.primary:hover { filter: brightness(1.1); }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #1a1210; } }
 
-  dialog { width: min(680px, calc(100vw - 32px)); max-height: calc(100vh - 32px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 14px; padding: 0; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
+  dialog { width: min(720px,calc(100vw - 32px)); max-height: calc(100vh - 32px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 14px; padding: 0; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
   dialog::backdrop { background: rgba(0,0,0,.45); }
   .dlg { padding: 20px; display: grid; gap: 14px; }
   .dlg h2 { margin: 0; font-size: 1.25rem; }
-  .dlg p, .dlg ol { margin: 0; }
-  .dlg ol { padding-left: 20px; display: grid; gap: 6px; }
+  .dlg p { margin: 0; }
+  .plist { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; overflow-y: auto; max-height: min(52vh, 460px); }
+  .plist li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  .plist li:last-child { border-bottom: 0; }
+  .plist .n { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+  .plist .what { display: grid; overflow-wrap: anywhere; }
+  .plist .vibe { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+  .plist .vibe.upbeat { background: var(--accent-soft); color: var(--text); }
+  .plist .why { grid-column: 2 / -1; color: var(--muted); font-size: .85rem; }
   .dlg .facts { background: var(--surface-2); border-radius: 10px; padding: 10px 14px; font-size: .92rem; display: grid; gap: 4px; }
   .dlg .warn { border: 1px solid var(--accent); background: var(--accent-soft); border-radius: 10px; padding: 10px 14px; }
   .dlg .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   a.btn { text-decoration: none; display: inline-block; }
-  .dlg textarea { width: 100%; min-height: 180px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: .8rem/1.4 ui-monospace, Menlo, Consolas, monospace; }
-  .dlg summary { cursor: pointer; color: var(--muted); }
+  .dlg .warn .btn { margin-left: 6px; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -175,24 +182,15 @@
 
   <dialog id="suggestDlg" aria-labelledby="suggestTitle">
     <div class="dlg">
-      <h2 id="suggestTitle">Suggest songs for the next show</h2>
+      <h2 id="suggestTitle">Suggested playlist for the next show</h2>
       <div class="facts" id="suggestFacts"></div>
       <div class="warn" id="suggestWarn" hidden></div>
-      <ol>
-        <li>Press <b>Copy request</b>. It holds your rules and the songs that are free to use.</li>
-        <li>Open Claude (with Google Drive connected) and paste it in.</li>
-        <li>Claude picks the 13 songs and saves them as a new Google Sheet in your Drive.</li>
-      </ol>
+      <ol class="plist" id="suggestList"></ol>
       <div class="actions">
-        <button type="button" class="btn primary" id="copyReq">Copy request</button>
-        <a class="btn" href="https://claude.ai/new" target="_blank" rel="noopener">Open Claude ↗</a>
+        <button type="button" class="btn primary" id="saveCsv">Save as CSV</button>
+        <button type="button" class="btn" id="again">Suggest again</button>
         <button type="button" class="btn" id="closeDlg">Close</button>
-        <span id="copyMsg" role="status"></span>
       </div>
-      <details>
-        <summary>Preview the request</summary>
-        <textarea id="reqText" readonly aria-label="The request to paste into Claude"></textarea>
-      </details>
     </div>
   </dialog>
 
@@ -682,85 +680,149 @@
   function ddmmyyyy(d) {
     return ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear();
   }
+  function yearOf(meta) {
+    var m = /\b(1[5-9]\d\d|20\d\d)\b/.exec((meta && meta.year) || '');
+    return m ? +m[1] : 0;
+  }
+  function decadeOf(y) { return y ? Math.floor(y / 10) * 10 + 's' : ''; }
 
-  function buildSuggestion() {
-    // The last 4 shows = the 4 newest date-named tabs
-    var last4 = DATA.broadcasts.filter(function (b) { return b.date; })
-      .sort(function (a, b) { return a.date < b.date ? 1 : -1; }).slice(0, 4);
-    var inLast4 = {};
-    last4.forEach(function (b) { inLast4[b.tab] = 1; });
+  // The pool = every song NOT played in the newest `excludeN` date-named tabs
+  function buildPool(excludeN) {
+    var last = DATA.broadcasts.filter(function (b) { return b.date; })
+      .sort(function (a, b) { return a.date < b.date ? 1 : -1; }).slice(0, excludeN);
+    var inLast = {};
+    last.forEach(function (b) { inLast[b.tab] = 1; });
 
-    var excludedShows = last4.map(function (b) {
+    var excludedShows = last.map(function (b) {
       var songs = [];
       DATA.songs.forEach(function (s) {
         s.plays.forEach(function (p) { if (p.tab === b.tab) songs.push({ pos: p.pos, text: s.song + ' (' + s.show + ')' }); });
       });
       songs.sort(function (a, c) { return a.pos - c.pos; });
-      return b.tab + ': ' + songs.map(function (x) { return x.text; }).join('; ');
+      return { tab: b.tab, date: b.date, line: b.tab + ': ' + songs.map(function (x) { return x.text; }).join('; ') };
     });
 
-    var pool = DATA.songs.filter(function (s) { return !s.plays.some(function (p) { return inLast4[p.tab]; }); })
-      .map(function (s) { return { song: s.song, show: s.show, year: (s.meta.year || '').slice(0, 40), vibe: guessVibe(s.song, s.show) }; })
-      .sort(function (a, b) { return norm(a.show) < norm(b.show) ? -1 : norm(a.show) > norm(b.show) ? 1 : norm(a.song) < norm(b.song) ? -1 : 1; });
-
-    var count = { upbeat: 0, slow: 0, unsure: 0 };
-    pool.forEach(function (p) { count[p.vibe]++; });
-
-    var text = [
-      'Please suggest a playlist for my next hospital radio show from the songs below.',
-      '',
-      'Choose the songs yourself using your own judgment (do not write code or call an API to pick them). Rules:',
-      '- Exactly 13 songs. Never more, never fewer.',
-      '- Only use songs from the "Available songs" list. Nothing from the last 4 shows (listed below) may appear. No duplicates.',
-      '- Target about 7 upbeat and 6 slow, adjusted slightly for flow.',
-      '- Order for variety: avoid two songs of the same vibe in a row where possible.',
-      '- Open with a strong, recognisable upbeat track. Close on an upbeat crowd favourite.',
-      '- Aim for variety of eras and shows, and avoid clustering songs from the same musical or film.',
-      '- Songs marked "unsure" had no clear vibe from their keywords, so use your own judgment for them.',
-      '- No source citations. Keep each reason to one short sentence.',
-      '',
-      'Then use Google Drive create_file to create a new Google Sheet (CSV content, contentMimeType text/csv) titled',
-      '"Hospital Radio Playlist Suggestion - ' + ddmmyyyy(new Date()) + '" with the columns: Position,Title,Show,Vibe,Notes',
-      '(Notes = the one-sentence reason). Below the 13 rows add a blank line, a one-line summary of the playlist, another blank line,',
-      'then "Excluded (last 4 shows):" followed by one line per excluded show with its songs. Finally give me the sheet link and the playlist as a table here.',
-      'If fewer than 13 songs are available, tell me and suggest relaxing the exclusion to the last 3 shows before continuing.',
-      '',
-      'Last 4 shows (excluded):',
-      excludedShows.join('\n'),
-      '',
-      'Available songs (' + pool.length + ') - Title | Show | Vibe | Year:',
-      pool.map(function (p) { return p.song + ' | ' + p.show + ' | ' + p.vibe + (p.year ? ' | ' + p.year : ''); }).join('\n')
-    ].join('\n');
-
-    return { last4: last4, excludedCount: DATA.songs.length - pool.length, pool: pool, count: count, text: text };
+    var pool = DATA.songs.filter(function (s) { return !s.plays.some(function (p) { return inLast[p.tab]; }); })
+      .map(function (s) {
+        var y = yearOf(s.meta);
+        return { key: s.key, song: s.song, show: s.show, vibe: guessVibe(s.song, s.show), guessed: false,
+          plays: s.plays.length, last: s.lastAll, decade: decadeOf(y) };
+      });
+    return { last: last, excludedShows: excludedShows, excludedCount: DATA.songs.length - pool.length, pool: pool };
   }
 
-  var suggestion = null;
-  $('suggest').addEventListener('click', function () {
-    suggestion = buildSuggestion();
-    var s = suggestion;
+  function monthsSince(iso) {
+    if (!iso) return 12;
+    var p = iso.split('-'), now = new Date();
+    return Math.min(12, ((now.getFullYear() - +p[0]) * 12 + (now.getMonth() - (+p[1] - 1))));
+  }
+
+  // Picks 13 songs: upbeat on odd positions (7), slow on even (6), so no two neighbours share a vibe.
+  // Opens and closes with well-known upbeat songs; spreads shows and eras. Randomised so "Suggest again" differs.
+  function pickPlaylist(pool) {
+    var N = 13, chosen = new Array(N), taken = {}, showUse = {}, eraUse = {};
+    var order = [0, N - 1];
+    for (var i = 1; i < N - 1; i++) order.push(i);
+
+    order.forEach(function (pos) {
+      var want = pos % 2 === 0 ? 'upbeat' : 'slow';
+      var ends = pos === 0 || pos === N - 1;
+      var best = null, bestScore = -Infinity;
+      pool.forEach(function (c) {
+        if (taken[c.key]) return;
+        var score = Math.random() * (ends ? 1 : 1.5);
+        if (c.vibe === want) score += 0;
+        else if (c.vibe === 'unsure') score -= 0.3;
+        else score -= 5; // wrong vibe: only if nothing else is left
+        if (ends) score += Math.log(1 + c.plays) * 2; // well-known = played often
+        else score += Math.min(1, monthsSince(c.last) / 12) * 0.8; // rested for a while
+        score -= 4 * (showUse[c.show] || 0);
+        if ((chosen[pos - 1] && chosen[pos - 1].show === c.show) || (chosen[pos + 1] && chosen[pos + 1].show === c.show)) score -= 6;
+        if (c.decade) score -= 1.2 * (eraUse[c.decade] || 0);
+        if (score > bestScore) { bestScore = score; best = c; }
+      });
+      var pick = Object.assign({}, best);
+      if (pick.vibe === 'unsure') { pick.vibe = want; pick.guessed = true; }
+      chosen[pos] = pick;
+      taken[pick.key] = 1;
+      showUse[pick.show] = (showUse[pick.show] || 0) + 1;
+      if (pick.decade) eraUse[pick.decade] = (eraUse[pick.decade] || 0) + 1;
+    });
+
+    chosen.forEach(function (c, i) {
+      var times = c.plays + (c.plays === 1 ? ' time' : ' times');
+      var lastTxt = c.last ? '; last played ' + fmtDate(c.last) : '';
+      if (i === 0) c.reason = 'Strong, recognisable upbeat opener from ' + c.show + ', played ' + times + ' before.';
+      else if (i === N - 1) c.reason = 'Upbeat crowd favourite to close, played ' + times + ' before.';
+      else c.reason = (c.vibe === 'upbeat' ? 'Lively ' : 'Gentle ') + (c.decade ? c.decade + ' ' : '') + 'pick from ' + c.show + lastTxt + '.';
+      if (c.guessed) c.reason = c.reason.replace(/\.$/, '') + ' (vibe is a guess).';
+    });
+    return chosen;
+  }
+
+  function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+
+  function playlistCsv(s) {
+    var up = s.picks.filter(function (p) { return p.vibe === 'upbeat'; }).length;
+    var shows = {}, eras = {};
+    s.picks.forEach(function (p) { shows[p.show] = 1; if (p.decade) eras[p.decade] = 1; });
+    var rows = [['Position', 'Title', 'Show', 'Vibe', 'Notes'].map(csvCell).join(',')];
+    s.picks.forEach(function (p, i) { rows.push((i + 1) + ',' + [p.song, p.show, p.vibe, p.reason].map(csvCell).join(',')); });
+    rows.push('');
+    rows.push(csvCell('Summary: ' + s.picks.length + ' songs (' + up + ' upbeat, ' + (s.picks.length - up) + ' slow) from ' +
+      Object.keys(shows).length + ' shows across ' + Math.max(1, Object.keys(eras).length) + ' eras; opens with ' + s.picks[0].song + ' and closes with ' + s.picks[s.picks.length - 1].song + '.'));
+    rows.push('');
+    rows.push(csvCell('Excluded (last ' + s.excludeN + ' shows):'));
+    s.excludedShows.forEach(function (x) { rows.push(csvCell(x.line)); });
+    return rows.join('\n');
+  }
+
+  var suggestion = null, excludeN = 4;
+
+  function showSuggestion() {
+    var b = buildPool(excludeN);
+    var warn = $('suggestWarn'), list = $('suggestList'), enough = b.pool.length >= 13;
     $('suggestFacts').innerHTML =
-      '<div><b>Excluded (last 4 shows):</b> ' + (s.last4.length ? s.last4.map(function (b) { return esc(fmtDate(b.date)); }).join(', ') : 'none found') + '</div>' +
-      '<div><b>' + s.excludedCount + '</b> songs excluded · <b>' + s.pool.length + '</b> available (' +
-      s.count.upbeat + ' upbeat · ' + s.count.slow + ' slow · ' + s.count.unsure + ' unsure)</div>';
-    var warn = $('suggestWarn');
-    warn.hidden = s.pool.length >= 13;
-    warn.textContent = s.pool.length >= 13 ? '' : 'Only ' + s.pool.length + ' songs are free to use, which is fewer than 13. Claude will tell you and suggest relaxing the exclusion to the last 3 shows.';
-    $('reqText').value = s.text;
-    $('copyMsg').textContent = '';
-    $('copyReq').textContent = 'Copy request';
+      '<div><b>Excluded (last ' + excludeN + ' shows):</b> ' + (b.last.length ? b.last.map(function (x) { return esc(fmtDate(x.date)); }).join(', ') : 'none') + '</div>' +
+      '<div><b>' + b.excludedCount + '</b> songs excluded · <b>' + b.pool.length + '</b> available to choose from</div>';
+
+    $('saveCsv').disabled = $('again').disabled = !enough;
+    warn.hidden = enough;
+    if (!enough) {
+      suggestion = null;
+      list.innerHTML = '';
+      warn.innerHTML = 'Only ' + b.pool.length + ' songs are free to use, which is fewer than 13.' +
+        (excludeN > 0 ? ' <button type="button" class="btn" data-excl="' + (excludeN - 1) + '">Only exclude the last ' + (excludeN - 1) + (excludeN - 1 === 1 ? ' show' : ' shows') + '</button>' : '');
+      return;
+    }
+
+    var picks = pickPlaylist(b.pool);
+    suggestion = { picks: picks, excludedShows: b.excludedShows, excludeN: excludeN };
+    list.innerHTML = picks.map(function (p, i) {
+      return '<li><span class="n">' + (i + 1) + '</span><span class="what"><b>' + esc(p.song) + '</b><span class="film">' + esc(p.show) + '</span></span>' +
+        '<span class="vibe ' + p.vibe + '">' + p.vibe + '</span><span class="why">' + esc(p.reason) + '</span></li>';
+    }).join('');
+  }
+
+  $('suggest').addEventListener('click', function () {
+    excludeN = 4;
+    showSuggestion();
     var dlg = $('suggestDlg');
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
   });
+  $('again').addEventListener('click', showSuggestion);
+  $('suggestWarn').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-excl]'); if (!b) return;
+    excludeN = +b.dataset.excl; showSuggestion();
+  });
   $('closeDlg').addEventListener('click', function () { $('suggestDlg').close(); });
-  $('copyReq').addEventListener('click', async function () {
-    var ok = false;
-    try { await navigator.clipboard.writeText(suggestion.text); ok = true; } catch (e) {
-      try { var ta = $('reqText'); ta.parentNode.open = true; ta.select(); ok = document.execCommand('copy'); } catch (e2) { /* fall through */ }
-    }
-    $('copyReq').textContent = ok ? 'Copied ✓' : 'Copy request';
-    $('copyMsg').textContent = ok ? 'Now paste it into Claude.' : 'Couldn’t copy automatically. Select the text in the preview and copy it.';
-    if (!ok) $('reqText').parentNode.open = true;
+  $('saveCsv').addEventListener('click', function () {
+    if (!suggestion) return;
+    var blob = new Blob(['﻿' + playlistCsv(suggestion)], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = 'hospital-radio-playlist-' + ddmmyyyy(new Date()) + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   });
 
   async function load() {
