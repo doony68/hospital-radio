@@ -91,7 +91,30 @@
   .plays small { display: none; font-weight: 400; color: var(--muted); }
   .chips { display: flex; flex-wrap: wrap; gap: 4px; }
   .chip { background: var(--accent-soft); color: var(--text); border-radius: 6px; padding: 1px 7px; font-size: .82rem; white-space: nowrap; }
+  button.chip { border: 0; font-family: inherit; cursor: pointer; }
+  button.chip:hover { outline: 2px solid var(--accent); }
   .chip.more { background: none; color: var(--muted); }
+  .dates select { background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font: inherit; padding: 8px 10px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pills:empty { display: none; }
+  .pill { background: var(--accent-soft); border: 1px solid var(--accent); color: var(--text); border-radius: 999px; padding: 4px 6px 4px 12px; font: inherit; font-size: .9rem; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+  .pill i { font-style: normal; font-size: 1.1rem; line-height: 1; color: var(--muted); padding: 0 4px; }
+
+  .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .chart > summary { cursor: pointer; padding: 12px 14px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  .chart > summary::-webkit-details-marker { display: none; }
+  .chart > summary span { font-weight: 400; color: var(--muted); font-size: .88rem; }
+  .bars { padding: 0 14px 14px; display: grid; gap: 2px; }
+  .bar-row { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: minmax(110px, 30%) 1fr; gap: 12px; align-items: center; padding: 3px 6px; border-radius: 6px; }
+  .bar-row:hover { background: var(--surface-2); }
+  .bar-row:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+  .bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; }
+  .bar-track { display: flex; align-items: center; gap: 8px; border-left: 1px solid var(--line); min-height: 24px; }
+  .bar { height: 16px; border-radius: 0 4px 4px 0; background: var(--accent); min-width: 4px; }
+  .bar-row:hover .bar { filter: brightness(1.12); }
+  .bar-val { font-size: .85rem; font-variant-numeric: tabular-nums; color: var(--text); }
+  .tip { position: fixed; z-index: 10; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 8px; padding: 6px 10px; font-size: .85rem; max-width: 260px; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+  .tip b { display: block; font-size: 1.05rem; }
   details[open] .chip.more { display: none; }
   .detail { padding: 4px 14px 16px; display: grid; gap: 8px; background: var(--surface-2); border-top: 1px solid var(--line); }
   .detail dl { margin: 0; display: grid; grid-template-columns: 150px 1fr; gap: 6px 12px; }
@@ -117,6 +140,7 @@
     summary.row .plays small { display: block; }
     summary.row .film { grid-column: 1; }
     summary.row .chips { grid-column: 1 / -1; }
+    .bar-row { grid-template-columns: 1fr; gap: 2px; }
     .detail dl { grid-template-columns: 1fr; gap: 0; }
     .detail dt { margin-top: 8px; }
   }
@@ -140,6 +164,18 @@
         <label>To <input type="date" id="to"></label>
         <div class="presets" id="presets" role="group" aria-label="Quick date ranges"></div>
       </div>
+      <div class="dates">
+        <label>Not played in the last
+          <select id="since">
+            <option value="0">— any time —</option>
+            <option value="1">1 month</option>
+            <option value="3">3 months</option>
+            <option value="6">6 months</option>
+            <option value="12">12 months</option>
+          </select>
+        </label>
+      </div>
+      <div class="pills" id="active" aria-label="Active filters"></div>
     </div>
 
     <div class="viewbar">
@@ -147,7 +183,9 @@
       <div class="summary" id="summary" aria-live="polite"></div>
     </div>
 
+    <div id="chart"></div>
     <div id="results"></div>
+    <div class="tip" id="tip" hidden></div>
   </div>
 
   <div id="status" class="msg" role="status">Loading your playlists…</div>
@@ -276,7 +314,7 @@
         if (!song || norm(song) === 'song') continue;
         var key = norm(song) + '|' + norm(show);
         var s = songs[key] || (songs[key] = { key: key, song: song, show: show, plays: [], meta: {}, hay: norm(song + ' ' + show) });
-        s.plays.push({ date: date, tab: title });
+        s.plays.push({ date: date, tab: title, pos: r });
         count++;
         ['year', 'filmStars', 'stageStars', 'composer', 'genre', 'synopsis', 'facts', 'chart'].forEach(function (f) {
           var v = idx[f] != null ? row[idx[f]] : '';
@@ -285,14 +323,14 @@
       }
       if (count) broadcasts.push({ tab: title, date: date });
     });
-    var list = Object.keys(songs).map(function (k) { return songs[k]; });
+    var list = Object.keys(songs).map(function (k) { songs[k].lastAll = latest(songs[k].plays); return songs[k]; });
     var dates = broadcasts.map(function (b) { return b.date; }).filter(Boolean).sort();
     return { songs: list, broadcasts: broadcasts, minDate: dates[0] || '', maxDate: dates[dates.length - 1] || '' };
   }
 
   // ---------- state & filtering ----------
   var DATA = null;
-  var state = { view: 'songs', q: '', from: '', to: '', sort: { songs: { k: 'plays', d: -1 }, shows: { k: 'plays', d: -1 } } };
+  var state = { view: 'songs', q: '', from: '', to: '', since: 0, chartClosed: false, sort: { songs: { k: 'plays', d: -1 }, shows: { k: 'plays', d: -1 } } };
   var openKeys = {};
 
   function inRange(p) {
@@ -308,8 +346,11 @@
   function compute() {
     var words = norm(state.q).split(' ').filter(Boolean);
     var songs = [];
+    var cutoff = state.since ? isoShift(isoToday(), state.since) : '';
     DATA.songs.forEach(function (s) {
       if (!words.every(function (w) { return s.hay.indexOf(w) !== -1; })) return;
+      // "not played in the last N months" looks at the song's last play anywhere in the sheet
+      if (cutoff && !(s.lastAll && s.lastAll < cutoff)) return;
       var plays = s.plays.filter(inRange);
       if (!plays.length) return;
       songs.push({ key: s.key, song: s.song, show: s.show, meta: s.meta, plays: plays, last: latest(plays) });
@@ -338,6 +379,7 @@
       song: function (r) { return norm(r.song); },
       show: function (r) { return norm(r.show); },
       plays: function (r) { return r.plays.length; },
+      order: function (r) { return Math.min.apply(null, r.plays.map(function (p) { return p.pos; })); }, // running order of a single show
       count: function (r) { return r.songs ? r.songs.length : 0; },
       last: function (r) { return r.last; }
     }[st.k];
@@ -353,7 +395,8 @@
     var sorted = plays.slice().sort(function (a, b) { return (b.date || b.tab) < (a.date || a.tab) ? -1 : 1; });
     var shown = max ? sorted.slice(0, max) : sorted;
     var html = shown.map(function (p) {
-      return '<span class="chip">' + esc(p.date ? fmtDate(p.date) : p.tab) + '</span>';
+      if (!p.date) return '<span class="chip">' + esc(p.tab) + '</span>';
+      return '<button type="button" class="chip" data-date="' + p.date + '" title="Show every song played on this date" aria-label="Show all songs played on ' + fmtDate(p.date) + '">' + fmtDate(p.date) + '</button>';
     }).join('');
     if (max && sorted.length > max) html += '<span class="chip more">+' + (sorted.length - max) + ' more</span>';
     return '<div class="chips">' + html + '</div>';
@@ -412,17 +455,49 @@
     return html;
   }
 
+  function chartHtml(c) {
+    var isSongs = state.view === 'songs';
+    var top = (isSongs ? c.songs : c.shows).slice().sort(function (a, b) {
+      return b.plays.length - a.plays.length || (norm(a.song || a.show) < norm(b.song || b.show) ? -1 : 1);
+    }).slice(0, 10);
+    if (top.length < 2 || top[0].plays.length < 2) return ''; // nothing to compare
+    var max = top[0].plays.length;
+    var bars = top.map(function (r) {
+      var n = r.plays.length, label = isSongs ? r.song : r.show;
+      return '<button type="button" class="bar-row" data-q="' + esc(label) + '" data-label="' + esc(label) + '" data-sub="' + esc(isSongs ? r.show : plural(r.songs.length, 'song', 'songs')) + '" data-n="' + n + '"' +
+        ' aria-label="' + esc(label) + ': ' + plural(n, 'play', 'plays') + '. Press to search for it.">' +
+        '<span class="bar-label">' + esc(label) + '</span>' +
+        '<span class="bar-track"><span class="bar" style="width:calc((100% - 40px) * ' + (n / max).toFixed(3) + ')"></span><span class="bar-val">' + n + '</span></span></button>';
+    }).join('');
+    return '<details class="chart"' + (state.chartClosed ? '' : ' open') + '><summary>Most played <span>top ' + top.length + ' ' + (isSongs ? 'songs' : 'films & musicals') + ' · matches your filters</span></summary>' +
+      '<div class="bars">' + bars + '</div></details>';
+  }
+
+  function pillsHtml() {
+    var p = [];
+    if (state.from && state.from === state.to) p.push(['date', 'Show of ' + fmtDate(state.from)]);
+    if (state.since) p.push(['since', 'Not played in the last ' + plural(state.since, 'month', 'months')]);
+    return p.map(function (x) {
+      return '<button type="button" class="pill" data-clear="' + x[0] + '" aria-label="Remove filter: ' + esc(x[1]) + '">' + esc(x[1]) + '<i aria-hidden="true">×</i></button>';
+    }).join('');
+  }
+
   function render() {
+    if (state.sort.songs.k === 'order' && !(state.from && state.from === state.to)) state.sort.songs = { k: 'plays', d: -1 };
     var c = compute();
+    $('tip').hidden = true; // the chart is rebuilt below, so its tooltip can't linger
     $('stats').innerHTML = [
       [c.broadcasts, 'Shows broadcast'], [c.totalPlays, 'Songs played'],
       [c.songs.length, 'Different songs'], [c.shows.length, 'Films & musicals']
     ].map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
 
     var rangeTxt = '';
-    if (state.from || state.to) {
+    if (state.from && state.from === state.to) {
+      rangeTxt = ' on ' + fmtDate(state.from);
+    } else if (state.from || state.to) {
       rangeTxt = ' between ' + (state.from ? fmtDate(state.from) : 'the start') + ' and ' + (state.to ? fmtDate(state.to) : 'today');
     }
+    if (state.since) rangeTxt += ' · not played in the last ' + plural(state.since, 'month', 'months');
     var rows = state.view === 'songs' ? c.songs : c.shows;
     $('summary').textContent = state.view === 'songs'
       ? plural(c.songs.length, 'song', 'songs') + ' · ' + plural(c.totalPlays, 'play', 'plays') + rangeTxt
@@ -432,6 +507,9 @@
       ? '<div class="list">' + (state.view === 'songs' ? renderSongs(c) : renderShows(c)) + '</div>'
       : '<div class="list"><div class="empty">Nothing found' + (state.q ? ' for “' + esc(state.q) + '”' : '') + rangeTxt + '. Try a different search or widen the dates.</div></div>';
 
+    $('chart').innerHTML = rows.length ? chartHtml(c) : '';
+    $('active').innerHTML = pillsHtml();
+    $('since').value = String(state.since);
     $('clear').hidden = !state.q;
     Array.prototype.forEach.call($('presets').children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.from === state.from && b.dataset.to === state.to)); });
     Array.prototype.forEach.call($('views').children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === state.view)); });
@@ -473,6 +551,54 @@
     var b = e.target.closest('button'); if (!b) return;
     state.view = b.dataset.view; render();
   });
+  $('since').addEventListener('change', function (e) { state.since = +e.target.value; render(); });
+  $('active').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-clear]'); if (!b) return;
+    if (b.dataset.clear === 'since') state.since = 0;
+    if (b.dataset.clear === 'date') { state.from = state.to = ''; $('from').value = $('to').value = ''; }
+    render();
+  });
+
+  // Click a date to see every song played on that broadcast, in running order
+  $('results').addEventListener('click', function (e) {
+    var d = e.target.closest('[data-date]'); if (!d) return;
+    e.preventDefault(); // don't also open/close the row
+    state.from = state.to = d.dataset.date;
+    state.q = ''; $('q').value = '';
+    state.since = 0; state.view = 'songs';
+    state.sort.songs = { k: 'order', d: 1 };
+    $('from').value = $('to').value = state.from;
+    render();
+    $('stats').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // Most-played chart: tooltip + click to search
+  var tip = $('tip');
+  function showTip(e) {
+    var b = e.target.closest('.bar-row'); if (!b) { tip.hidden = true; return; }
+    tip.innerHTML = '<b></b><span></span>';
+    tip.firstChild.textContent = b.dataset.n + (b.dataset.n === '1' ? ' play' : ' plays');
+    tip.lastChild.textContent = b.dataset.label + (b.dataset.sub ? ' · ' + b.dataset.sub : '');
+    var r = b.getBoundingClientRect();
+    var x = e.type === 'focusin' ? r.left + 40 : e.clientX + 14;
+    var y = e.type === 'focusin' ? r.bottom + 4 : e.clientY + 14;
+    tip.hidden = false;
+    tip.style.left = Math.max(8, Math.min(x, window.innerWidth - tip.offsetWidth - 8)) + 'px';
+    tip.style.top = Math.max(8, Math.min(y, window.innerHeight - tip.offsetHeight - 8)) + 'px';
+  }
+  $('chart').addEventListener('pointermove', showTip);
+  $('chart').addEventListener('focusin', showTip);
+  $('chart').addEventListener('pointerleave', function () { tip.hidden = true; });
+  $('chart').addEventListener('focusout', function () { tip.hidden = true; });
+  $('chart').addEventListener('click', function (e) {
+    var b = e.target.closest('.bar-row'); if (!b) return;
+    tip.hidden = true;
+    state.q = b.dataset.q; $('q').value = state.q; render();
+  });
+  $('chart').addEventListener('toggle', function (e) {
+    if (e.target.classList.contains('chart')) state.chartClosed = !e.target.open;
+  }, true);
+
   $('results').addEventListener('click', function (e) {
     var b = e.target.closest('[data-sort]'); if (!b) return;
     var st = state.sort[state.view], k = b.dataset.sort;
