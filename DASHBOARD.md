@@ -5,6 +5,9 @@
 - search for a song or a show / film
 - see how many times each song has been played and on which broadcast dates (the tab names)
 - filter by date range (or use the quick buttons: last 3 months, last 12 months, this year)
+- click any date to see every song played on that broadcast, in running order (click the pill to go back)
+- find songs you haven't played lately with **Not played in the last…** (1, 3, 6 or 12 months)
+- see a **Most played** chart of the top 10 (click a bar to search for it); it follows your filters
 - switch to a "Shows & films" view to see how often each one has been played
 
 New tabs you add to the sheet appear automatically (tabs named like `06-10-2026`, day-month-year).
