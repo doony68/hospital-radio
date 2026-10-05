@@ -6,5 +6,5 @@ window.RADIO_CONFIG = {
   // A Google API key that is restricted to the Google Sheets API and to your
   // GitHub Pages address. It only allows reading sheets that are shared
   // as "Anyone with the link can view".
-  API_KEY: 'AIzaSyD9nXhSTI2OZOCvKTiSmH8hYZZtoEjziU4'
+  API_KEY: 'AIzaSyDei98s2LXXHAUIaNiPtad1YO2JXPKeZzI'
 };
