@@ -9,21 +9,20 @@
 - find songs you haven't played lately with **Not played in the last…** (1, 3, 6 or 12 months)
 - see a **Most played** chart of the top 10 (click a bar to search for it); it follows your filters
 - switch to a "Shows & films" view to see how often each one has been played
-- press **Suggest Songs** to plan your next show (see below)
+- press **Suggest Songs** for a ready-made 13-song playlist you can save as CSV (see below)
 
 ## Suggest Songs
 
-The page can't create Google Sheets or choose songs by itself, so the button hands the job to Claude:
+Press **Suggest Songs** and a window opens with a 13-song playlist for your next show:
 
-1. Press **Suggest Songs**. The page works out the last 4 shows (the 4 newest date-named tabs) and every
-   song that was *not* played in them, and tags each as upbeat, slow or unsure from keywords in the title and show name.
-2. Press **Copy request**, open Claude (with Google Drive connected) and paste it in.
-3. Claude picks exactly 13 songs by its own judgment (about 7 upbeat and 6 slow, alternating, opening and closing
-   on upbeat favourites, mixing eras and shows) and saves them as a new Google Sheet in your Drive.
+- **Last 4 shows excluded:** the 4 newest date-named tabs. Nothing played in them can appear.
+- **Upbeat / slow:** each song is tagged from keywords in its title and show name. Songs with no keyword match are given whichever vibe the running order needs, and marked "(vibe is a guess)".
+- **Running order:** 7 upbeat and 6 slow, alternating, so no two neighbours share a vibe. It opens with a well-known upbeat song and closes with an upbeat crowd favourite. "Well-known" and "favourite" mean songs you've played most often.
+- **Variety:** it avoids repeating a show or an era, and prefers songs that haven't been played for a while.
+- **Suggest again** gives a different playlist. **Save as CSV** downloads it with Position, Title, Show, Vibe and Notes columns, a summary line and the list of excluded songs. Open the file in Google Sheets with File → Import.
+- If fewer than 13 songs are free to use, the window says so and offers to exclude one show fewer.
 
-The request includes all your rules, so there's nothing else to type. If fewer than 13 songs are free to use, the page warns you.
-
-New tabs you add to the sheet appear automatically (tabs named like `06-10-2026`, day-month-year).
+The picking is done by a formula on the page, so it's a good starting point rather than a hand-made running order.
 
 ## One-off setup (about 10 minutes)
 
