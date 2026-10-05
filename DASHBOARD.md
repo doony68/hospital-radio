@@ -8,7 +8,7 @@
 - click any date to see every song played on that broadcast, in running order (click the pill to go back)
 - find songs you haven't played lately with **Not played in the last…** (1, 3, 6 or 12 months)
 - see a **Most played** chart of the top 10 (click a bar to search for it); it follows your filters
-- switch to a "Shows & films" view to see how often each one has been played
+- switch to a "Shows & films" view to see how often each one has been played, with the dates of every song (click a date for that show's running order)
 - press **Suggest Songs** for a ready-made 13-song playlist you can save as CSV (see below)
 
 ## Suggest Songs
