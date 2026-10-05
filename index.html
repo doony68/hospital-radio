@@ -81,6 +81,7 @@
     background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font: inherit;
   }
   input[type="date"] { padding: 8px 10px; }
+  input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; } /* we draw our own clear button */
   .dates { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
   .dates label { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); }
   .presets { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -146,7 +147,8 @@
   .detail dd { margin: 0; overflow-wrap: anywhere; }
   .detail h3 { margin: 10px 0 0; font-size: .85rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
   .sub-songs { display: grid; gap: 6px; }
-  .sub-songs div { display: grid; grid-template-columns: minmax(0, 1fr) 60px; gap: 12px; }
+  .sub-song { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr) 40px; gap: 4px 12px; align-items: start; padding: 2px 0; }
+  .sub-song .plays { text-align: right; }
 
   .msg { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
   .msg.error { border-color: var(--accent); }
@@ -165,6 +167,8 @@
     summary.row .film { grid-column: 1; }
     summary.row .chips { grid-column: 1 / -1; }
     .bar-row { grid-template-columns: 1fr; gap: 2px; }
+    .sub-song { grid-template-columns: minmax(0, 1fr) auto; }
+    .sub-song .chips { grid-column: 1 / -1; grid-row: 2; }
     .detail dl { grid-template-columns: 1fr; gap: 0; }
     .detail dt { margin-top: 8px; }
   }
@@ -492,7 +496,8 @@
         '<span class="film">' + (sh.last ? fmtDate(sh.last) : '') + '</span></summary>' +
         '<div class="detail"><h3>Songs played</h3><div class="sub-songs">' +
         songs.map(function (s) {
-          return '<div><span>' + esc(s.song) + '</span><span class="plays">' + s.plays.length + '×</span></div>';
+          return '<div class="sub-song"><span class="sub-name">' + esc(s.song) + '</span>' + datesHtml(s.plays, 0) +
+            '<span class="plays">' + s.plays.length + '×</span></div>';
         }).join('') + '</div></div></details>';
     }).join('');
     return html;
