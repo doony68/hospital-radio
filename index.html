@@ -62,7 +62,7 @@
   .dlg h2 { margin: 0; font-size: 1.25rem; }
   .dlg p { margin: 0; }
   .plist { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; overflow-y: auto; max-height: min(52vh, 460px); }
-  .plist li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  .plist li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto auto; gap: 2px 10px; align-items: baseline; padding: 9px 12px; border-bottom: 1px solid var(--line); }
   .plist li:last-child { border-bottom: 0; }
   .plist .n { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
   .plist .what { display: grid; overflow-wrap: anywhere; }
@@ -74,6 +74,16 @@
   .dlg .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   a.btn { text-decoration: none; display: inline-block; }
   .dlg .warn .btn { margin-left: 6px; }
+  .rm { all: unset; cursor: pointer; font-size: .82rem; color: var(--muted); padding: 1px 8px; border-radius: 6px; }
+  .rm:hover { color: var(--danger); background: var(--danger-soft); }
+  .head button:focus-visible, footer button:focus-visible, .rm:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .listmeta { color: var(--muted); font-size: .88rem; }
+  .addrow { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr) 84px auto; gap: 8px; align-items: end; }
+  .addrow[hidden] { display: none; }
+  .addrow label { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); }
+  .addrow input { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font: inherit; padding: 8px 10px; }
+  .sayline { min-height: 1.2em; font-size: .9rem; color: var(--text); }
+  .dlg .hint { color: var(--muted); font-size: .85rem; }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
@@ -175,6 +185,8 @@
     summary.row .film { grid-column: 1; }
     summary.row .chips { grid-column: 1 / -1; }
     .bar-row { grid-template-columns: 1fr; gap: 2px; }
+    .addrow { grid-template-columns: 1fr auto; }
+    .addrow label:nth-child(1), .addrow label:nth-child(2) { grid-column: 1 / -1; }
     .sub-song { grid-template-columns: minmax(0, 1fr) auto; }
     .sub-song .chips { grid-column: 1 / -1; grid-row: 2; }
     .detail dl { grid-template-columns: 1fr; gap: 0; }
@@ -198,11 +210,23 @@
       <div class="facts" id="suggestFacts"></div>
       <div class="warn" id="suggestWarn" hidden></div>
       <ol class="plist" id="suggestList"></ol>
+      <div class="listmeta" id="listMeta"></div>
+      <form class="addrow" id="addForm" autocomplete="off">
+        <label>Add a song <input type="text" id="addSong" list="songOptions" placeholder="Pick one of yours, or type a new song"></label>
+        <label>Show / film <input type="text" id="addShow" placeholder="Show or film"></label>
+        <label>Position <input type="number" id="addPos" min="1" value="14"></label>
+        <button type="submit" class="btn" id="addBtn">Add</button>
+      </form>
+      <datalist id="songOptions"></datalist>
+      <div class="sayline" id="suggestMsg" role="status"></div>
       <div class="actions">
-        <button type="button" class="btn primary" id="saveCsv">Save as CSV</button>
+        <button type="button" class="btn primary" id="openClaude">Research in Claude ↗</button>
+        <button type="button" class="btn" id="copyReq">Copy request</button>
+        <button type="button" class="btn" id="saveCsv">Save as CSV</button>
         <button type="button" class="btn" id="again">Suggest again</button>
         <button type="button" class="btn" id="closeDlg">Close</button>
       </div>
+      <p class="hint"><b>Research in Claude</b> sends your final list to Claude, which runs your radio skill and creates a new Google Sheet in your Drive. Songs already in your sheet keep their details and only new ones are researched. Add that sheet to your Playlists workbook and name its tab with the show date (DD-MM-YYYY).</p>
     </div>
   </dialog>
 
@@ -719,9 +743,11 @@
       .map(function (s) {
         var y = yearOf(s.meta);
         return { key: s.key, song: s.song, show: s.show, vibe: guessVibe(s.song, s.show), guessed: false,
-          plays: s.plays.length, last: s.lastAll, decade: decadeOf(y) };
+          plays: s.plays.length, last: s.lastAll, decade: decadeOf(y), meta: s.meta, isNew: false };
       });
-    return { last: last, excludedShows: excludedShows, excludedCount: DATA.songs.length - pool.length, pool: pool };
+    var recent = {};
+    DATA.songs.forEach(function (s) { if (s.plays.some(function (p) { return inLast[p.tab]; })) recent[s.key] = 1; });
+    return { last: last, excludedShows: excludedShows, excludedCount: DATA.songs.length - pool.length, pool: pool, recent: recent };
   }
 
   function monthsSince(iso) {
@@ -764,51 +790,134 @@
       if (pick.decade) eraUse[pick.decade] = (eraUse[pick.decade] || 0) + 1;
     });
 
-    chosen.forEach(function (c, i) {
-      var times = c.plays + (c.plays === 1 ? ' time' : ' times');
-      var lastTxt = c.last ? '; last played ' + fmtDate(c.last) : '';
-      if (i === 0) c.reason = 'Strong, recognisable upbeat opener from ' + c.show + ', played ' + times + ' before.';
-      else if (i === N - 1) c.reason = 'Upbeat crowd favourite to close, played ' + times + ' before.';
-      else c.reason = (c.vibe === 'upbeat' ? 'Lively ' : 'Gentle ') + (c.decade ? c.decade + ' ' : '') + 'pick from ' + c.show + lastTxt + '.';
-      if (c.guessed) c.reason = c.reason.replace(/\.$/, '') + ' (vibe is a guess).';
-    });
     return chosen;
   }
 
   function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
 
+  // One short sentence per song, worked out from its current position so it stays right after edits.
+  function reasonFor(p, i, n) {
+    if (p.manual) return p.isNew ? 'Added by you: a new song, to be researched.' : 'Added by you: already in your sheet.';
+    var times = p.plays + (p.plays === 1 ? ' time' : ' times'), text;
+    if (i === 0 && p.vibe === 'upbeat') text = 'Strong, recognisable upbeat opener from ' + p.show + ', played ' + times + ' before.';
+    else if (i === n - 1 && p.vibe === 'upbeat') text = 'Upbeat crowd favourite to close, played ' + times + ' before.';
+    else text = (p.vibe === 'upbeat' ? 'Lively ' : 'Gentle ') + (p.decade ? p.decade + ' ' : '') + 'pick from ' + p.show + (p.last ? '; last played ' + fmtDate(p.last) : '') + '.';
+    return p.guessed ? text.replace(/\.$/, '') + ' (vibe is a guess).' : text;
+  }
+
   function playlistCsv(s) {
-    var up = s.picks.filter(function (p) { return p.vibe === 'upbeat'; }).length;
+    var n = s.picks.length;
+    var count = function (v) { return s.picks.filter(function (p) { return p.vibe === v; }).length; };
+    var up = count('upbeat'), slow = count('slow'), other = n - up - slow;
     var shows = {}, eras = {};
     s.picks.forEach(function (p) { shows[p.show] = 1; if (p.decade) eras[p.decade] = 1; });
     var rows = [['Position', 'Title', 'Show', 'Vibe', 'Notes'].map(csvCell).join(',')];
-    s.picks.forEach(function (p, i) { rows.push((i + 1) + ',' + [p.song, p.show, p.vibe, p.reason].map(csvCell).join(',')); });
+    s.picks.forEach(function (p, i) { rows.push((i + 1) + ',' + [p.song, p.show, p.vibe, reasonFor(p, i, n)].map(csvCell).join(',')); });
     rows.push('');
-    rows.push(csvCell('Summary: ' + s.picks.length + ' songs (' + up + ' upbeat, ' + (s.picks.length - up) + ' slow) from ' +
-      Object.keys(shows).length + ' shows across ' + Math.max(1, Object.keys(eras).length) + ' eras; opens with ' + s.picks[0].song + ' and closes with ' + s.picks[s.picks.length - 1].song + '.'));
+    rows.push(csvCell('Summary: ' + n + ' songs (' + up + ' upbeat, ' + slow + ' slow' + (other ? ', ' + other + ' unsure' : '') + ') from ' +
+      Object.keys(shows).length + ' shows across ' + Math.max(1, Object.keys(eras).length) + ' eras; opens with ' + s.picks[0].song + ' and closes with ' + s.picks[n - 1].song + '.'));
     rows.push('');
     rows.push(csvCell('Excluded (last ' + s.excludeN + ' shows):'));
     s.excludedShows.forEach(function (x) { rows.push(csvCell(x.line)); });
     return rows.join('\n');
   }
 
-  var suggestion = null, excludeN = 4, seen = {}, round = 0, prevKeys = null;
+  // A song needs researching when it's new, or the sheet holds no details for it
+  function hasInfo(meta) { return !!(meta && (meta.year || meta.synopsis || meta.facts || meta.genre || meta.composer)); }
+  function needsResearch(p) { return !!p.isNew || !hasInfo(p.meta); }
+
+  // The request that's handed to Claude to run the radio skill on the final list
+  function researchRequest(picks) {
+    var blocks = picks.map(function (p, i) {
+      var head = (i + 1) + '. ' + p.song + ' (' + p.show + ')';
+      if (needsResearch(p)) return head + ' - RESEARCH';
+      return head + ' - KNOWN, copy these exactly:\n' + FIELDS.map(function (f) {
+        return '   ' + f[1] + ': ' + (p.meta[f[0]] || 'N/A');
+      }).join('\n');
+    });
+    return [
+      'Please run my radio skill (/play) on the songs below, then create a NEW Google Sheet in my Google Drive using Google Drive create_file',
+      '(CSV content, contentMimeType text/csv, so it converts to a Sheet). Title it "Northern Air playlist - ' + ddmmyyyy(new Date()) + '".',
+      '',
+      'Rules:',
+      '- One row per song, in exactly the order listed. No extra songs or rows.',
+      '- Columns, in this order: Song, Show, Year Released (Movie/Stage), Lead Film Stars, Lead Stage Stars, Composer/Lyricist, Genre, Synopsis, Interesting Facts, UK Chart Info.',
+      '- Songs marked KNOWN already have their details in my Playlists sheet and are given below. Copy those details exactly. Do not re-research or reword them.',
+      '- Songs marked RESEARCH are not in my sheet yet (or have no stored details). Research them as the radio skill normally does, and use N/A where a field does not apply.',
+      '- No source citations in the sheet.',
+      '- When done, give me the link to the sheet and show the rows here as a table. I will add the sheet to my Playlists workbook myself.',
+      '',
+      'Songs (' + picks.length + '):',
+      blocks.join('\n')
+    ].join('\n');
+  }
+
+  function copyText(text) {
+    var fallback = function () {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand('copy'); ta.remove(); return ok;
+      } catch (e) { return false; }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallback(); });
+    }
+    return Promise.resolve(fallback());
+  }
+
+  var suggestion = null, excludeN = 4, seen = {}, round = 0, prevKeys = null, edited = false, optionMap = {};
+
+  function say(msg) { $('suggestMsg').textContent = msg || ''; }
+
+  // Autocomplete for the add box: every song already in the sheet
+  function buildOptions() {
+    optionMap = {};
+    $('songOptions').innerHTML = DATA.songs.slice().sort(function (a, b) { return norm(a.song) < norm(b.song) ? -1 : 1; }).map(function (s) {
+      var label = s.song + ' (' + s.show + ')';
+      optionMap[label] = s;
+      return '<option value="' + esc(label) + '"></option>';
+    }).join('');
+  }
+
+  function renderList() {
+    var picks = suggestion.picks, n = picks.length;
+    $('suggestList').innerHTML = picks.map(function (p, i) {
+      return '<li><span class="n">' + (i + 1) + '</span><span class="what"><b>' + esc(p.song) + '</b><span class="film">' + esc(p.show) + '</span></span>' +
+        '<span class="vibe ' + p.vibe + '">' + p.vibe + '</span>' +
+        '<button type="button" class="rm" data-rm="' + i + '" aria-label="Remove ' + esc(p.song) + ' from the list">Remove</button>' +
+        '<span class="why">' + esc(reasonFor(p, i, n)) + '</span></li>';
+    }).join('');
+    var research = picks.filter(needsResearch).length;
+    $('listMeta').textContent = n + (n === 1 ? ' song' : ' songs') + ' in the list' + (edited ? ' (edited)' : '') +
+      (n ? ' · ' + research + ' to research in Claude, ' + (n - research) + ' already in your sheet' : '');
+    $('addPos').max = n + 1;
+    $('addPos').value = n + 1;
+    ['saveCsv', 'openClaude', 'copyReq'].forEach(function (id) { $(id).disabled = n === 0; });
+  }
 
   // again = true re-runs the choice, steering away from songs already suggested; false starts afresh
   function showSuggestion(again) {
+    if (again && edited && !window.confirm('Suggest again will replace the changes you made to the list. Continue?')) return;
     if (!again) { seen = {}; round = 0; prevKeys = null; }
+    edited = false;
+    say('');
     var b = buildPool(excludeN);
-    var warn = $('suggestWarn'), list = $('suggestList'), enough = b.pool.length >= 13;
+    var warn = $('suggestWarn'), enough = b.pool.length >= 13;
     var factsHtml =
       '<div><b>Excluded (last ' + excludeN + ' shows):</b> ' + (b.last.length ? b.last.map(function (x) { return esc(fmtDate(x.date)); }).join(', ') : 'none') + '</div>' +
       '<div><b>' + b.excludedCount + '</b> songs excluded · <b>' + b.pool.length + '</b> available to choose from</div>';
     $('suggestFacts').innerHTML = factsHtml;
 
-    $('saveCsv').disabled = $('again').disabled = !enough;
+    $('again').disabled = !enough;
+    $('addForm').hidden = !enough;
     warn.hidden = enough;
     if (!enough) {
       suggestion = null;
-      list.innerHTML = '';
+      $('suggestList').innerHTML = '';
+      $('listMeta').textContent = '';
+      ['saveCsv', 'openClaude', 'copyReq'].forEach(function (id) { $(id).disabled = true; });
       warn.innerHTML = 'Only ' + b.pool.length + ' songs are free to use, which is fewer than 13.' +
         (excludeN > 0 ? ' <button type="button" class="btn" data-excl="' + (excludeN - 1) + '">Only exclude the last ' + (excludeN - 1) + (excludeN - 1 === 1 ? ' show' : ' shows') + '</button>' : '');
       return;
@@ -820,15 +929,13 @@
     prevKeys = {};
     picks.forEach(function (p) { seen[p.key] = (seen[p.key] || 0) + 1; prevKeys[p.key] = 1; });
     if (round > 1) $('suggestFacts').innerHTML = factsHtml + '<div>Suggestion ' + round + ': <b>' + fresh + '</b> of ' + picks.length + ' songs are new compared with the last one</div>';
-    suggestion = { picks: picks, excludedShows: b.excludedShows, excludeN: excludeN };
-    list.innerHTML = picks.map(function (p, i) {
-      return '<li><span class="n">' + (i + 1) + '</span><span class="what"><b>' + esc(p.song) + '</b><span class="film">' + esc(p.show) + '</span></span>' +
-        '<span class="vibe ' + p.vibe + '">' + p.vibe + '</span><span class="why">' + esc(p.reason) + '</span></li>';
-    }).join('');
+    suggestion = { picks: picks, excludedShows: b.excludedShows, excludeN: excludeN, recent: b.recent };
+    renderList();
   }
 
   $('suggest').addEventListener('click', function () {
     excludeN = 4;
+    buildOptions();
     showSuggestion(false);
     var dlg = $('suggestDlg');
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
@@ -839,8 +946,70 @@
     excludeN = +b.dataset.excl; showSuggestion(false);
   });
   $('closeDlg').addEventListener('click', function () { $('suggestDlg').close(); });
-  $('saveCsv').addEventListener('click', function () {
+
+  // Remove a song from the list
+  $('suggestList').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-rm]'); if (!b || !suggestion) return;
+    var i = +b.dataset.rm, gone = suggestion.picks.splice(i, 1)[0];
+    edited = true;
+    renderList();
+    say('Removed “' + gone.song + '”.');
+    var next = $('suggestList').querySelector('[data-rm="' + Math.min(i, suggestion.picks.length - 1) + '"]');
+    (next || $('addSong')).focus();
+  });
+
+  // Picking a song from the autocomplete fills in its show too
+  $('addSong').addEventListener('input', function (e) {
+    var s = optionMap[e.target.value];
+    if (s) { e.target.value = s.song; $('addShow').value = s.show; }
+  });
+
+  // Add a song: one already in the sheet, or a brand-new one
+  $('addForm').addEventListener('submit', function (e) {
+    e.preventDefault();
     if (!suggestion) return;
+    var title = $('addSong').value.trim(), show = $('addShow').value.trim();
+    if (!title || !show) { say('Please enter both the song and its show or film.'); return; }
+    var key = norm(title) + '|' + norm(show);
+    if (suggestion.picks.some(function (p) { return p.key === key; })) { say('“' + title + '” is already in the list.'); return; }
+    var known = DATA.songs.filter(function (s) { return s.key === key; })[0];
+    var pick = known
+      ? { key: key, song: known.song, show: known.show, plays: known.plays.length, last: known.lastAll, decade: decadeOf(yearOf(known.meta)), meta: known.meta, isNew: false }
+      : { key: key, song: title, show: show, plays: 0, last: '', decade: '', meta: {}, isNew: true };
+    pick.vibe = guessVibe(pick.song, pick.show);
+    pick.manual = true;
+    var n = suggestion.picks.length;
+    var pos = Math.max(1, Math.min(n + 1, Math.floor(+$('addPos').value) || n + 1));
+    suggestion.picks.splice(pos - 1, 0, pick);
+    edited = true;
+    $('addSong').value = ''; $('addShow').value = '';
+    renderList();
+    say('Added “' + pick.song + '” at position ' + pos + (pick.isNew ? ' as a new song.' : ' (already in your sheet).') +
+      (suggestion.recent[key] ? ' Note: it was played in one of the last ' + suggestion.excludeN + ' shows.' : ''));
+    $('addSong').focus();
+  });
+
+  // Hand the final list to Claude to run the radio skill
+  $('openClaude').addEventListener('click', function () {
+    if (!suggestion || !suggestion.picks.length) return;
+    var text = researchRequest(suggestion.picks);
+    var url = 'https://claude.ai/new?q=' + encodeURIComponent(text);
+    var fits = url.length <= 7500; // longer than this, a link may be cut off, so paste instead
+    window.open(fits ? url : 'https://claude.ai/new', '_blank', 'noopener');
+    copyText(text).then(function (ok) {
+      say(fits ? 'Opened Claude with your request filled in.' + (ok ? ' A copy is also on your clipboard.' : '')
+        : (ok ? 'Opened Claude. The request is too long for a link, so it is on your clipboard: paste it into the chat and send.' : 'Opened Claude. Use “Copy request”, then paste it into the chat.'));
+    });
+  });
+  $('copyReq').addEventListener('click', function () {
+    if (!suggestion || !suggestion.picks.length) return;
+    copyText(researchRequest(suggestion.picks)).then(function (ok) {
+      say(ok ? 'Request copied. Paste it into a Claude chat and send.' : 'Couldn’t copy automatically. Please try again.');
+    });
+  });
+
+  $('saveCsv').addEventListener('click', function () {
+    if (!suggestion || !suggestion.picks.length) return;
     var blob = new Blob(['﻿' + playlistCsv(suggestion)], { type: 'text/csv;charset=utf-8' });
     var url = URL.createObjectURL(blob), a = document.createElement('a');
     a.href = url; a.download = 'hospital-radio-playlist-' + ddmmyyyy(new Date()) + '.csv';
