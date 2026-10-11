@@ -603,7 +603,7 @@ window.SINGLES = [
  },
  {
   "cat": 76,
-  "artist": "Mick & The Mechanics",
+  "artist": "Mike & The Mechanics",
   "title": "The Living Years",
   "notes": "Written by B.A. Robertson and Mike Rutherford about Robertson's difficult relationship with his late father, with Paul Carrack on lead vocals. UK No. 2 and a US No. 1.",
   "genre": "Pop rock",
@@ -635,7 +635,7 @@ window.SINGLES = [
  },
  {
   "cat": 80,
-  "artist": "S Express",
+  "artist": "S'Express",
   "title": "Theme from S-Express",
   "notes": "Written and produced by Mark Moore and Pascal Gabriel. It spent two weeks at UK No. 1 in April 1988 and topped the US dance chart.",
   "genre": "House / Acid house",
@@ -707,7 +707,7 @@ window.SINGLES = [
  },
  {
   "cat": 89,
-  "artist": "Robert Howard & Kim Mazelle",
+  "artist": "Robert Howard & Kym Mazelle",
   "title": "Wait",
   "notes": "A collaboration between Robert Howard, of the Blow Monkeys, and Chicago house singer Kym Mazelle. It reached UK No. 7 in early 1989 and is seen as a forerunner of UK garage.",
   "genre": "House / Garage",
@@ -765,96 +765,208 @@ window.SINGLES = [
   "cat": 96,
   "artist": "Bobby Brown",
   "title": "My Prerogative",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Co-written and produced with Gene Griffin, and Brown's only US No. 1. It reached No. 6 in the UK.",
+  "genre": "New jack swing / R&B",
+  "year": 1988
  },
  {
   "cat": 97,
   "artist": "Michael Ball",
   "title": "Love Changes Everything",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "From Andrew Lloyd Webber's musical Aspects of Love, with lyrics by Don Black and Charles Hart. Ball played Alex in the show, and the single reached UK No. 2 and became his signature song.",
+  "genre": "Musical theatre / Ballad",
+  "year": 1989
  },
  {
   "cat": 98,
   "artist": "Michael Jackson",
   "title": "Leave Me Alone",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Taken from Bad, where it first appeared only on CD editions. It reached UK No. 2 in 1989, and its video won the Grammy for Best Music Video.",
+  "genre": "Pop / R&B",
+  "year": 1989
  },
  {
   "cat": 99,
   "artist": "Bananarama",
   "title": "Help",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "A cover of the Beatles' \"Help!\", recorded with French and Saunders and Kathy Burke as Lananeeneenoonoo for Comic Relief. It reached UK No. 3 in early 1989.",
+  "genre": "Pop / Charity single",
+  "year": 1989
  },
  {
   "cat": 100,
   "artist": "Sam Brown",
   "title": "Stop!",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Brown's debut single flopped at UK No. 52 in 1988, then reached No. 4 when re-released in January 1989. She's the daughter of Joe Brown and Vicki Brown.",
+  "genre": "Pop rock / Soul",
+  "year": 1988
  },
  {
   "cat": 101,
   "artist": "Living In A Box",
   "title": "Blow The House Down",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Lead single from Gatecrashing, with a guitar solo from Queen's Brian May. It reached UK No. 10, their second Top 10 hit.",
+  "genre": "Pop / Rock",
+  "year": 1989
  },
  {
   "cat": 102,
   "artist": "Flash & The Pan",
   "title": "Waiting For A Train",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Written and produced by Harry Vanda and George Young, from the album Headlines. The single reached UK No. 7 in June 1983.",
+  "genre": "New wave / Synth-pop",
+  "year": 1983
  },
  {
   "cat": 103,
   "artist": "Edie Brickell & New Bohemians",
   "title": "What I Am",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Lead single from the debut album Shooting Rubberbands at the Stars. It reached No. 7 in the US and No. 31 in the UK.",
+  "genre": "Folk rock / Alternative",
+  "year": 1988
  },
  {
   "cat": 104,
   "artist": "Gloria Estefan and Miami Sound Machine",
   "title": "Can't Stay Away From You",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Taken from the album Let It Loose. It stalled at UK No. 88 in 1988, then reached No. 7 when re-released in 1989, and it reached No. 6 in the US.",
+  "genre": "Latin pop / Ballad",
+  "year": 1988
  },
  {
   "cat": 105,
   "artist": "Boy Meets Girl",
   "title": "Bring Down The Moon",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Written by Shannon Rubicam and George Merrill and the opening track of Reel Life. It followed \"Waiting for a Star to Fall\" but only reached UK No. 92 and US No. 49.",
+  "genre": "Pop",
+  "year": 1989
  },
  {
   "cat": 106,
   "artist": "Dusty Springfield",
   "title": "Nothing Has Been Proved",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Written by Neil Tennant and Chris Lowe of the Pet Shop Boys for the 1989 film Scandal, with a Courtney Pine sax solo. It put Dusty back in the UK Top 20 for the first time in 21 years.",
+  "genre": "Pop / Synth-pop",
+  "year": 1989
  },
  {
   "cat": 107,
   "artist": "Womack & Womack",
   "title": "Celebrate The World",
-  "notes": "",
-  "genre": "",
-  "year": null
+  "notes": "Second single from the album Conscience, chosen after \"Life's Just a Ballgame\" stalled. It reached the UK Top 20.",
+  "genre": "Soul / R&B",
+  "year": 1989
+ },
+ {
+  "cat": 108,
+  "artist": "The Reynolds Girls",
+  "title": "I'd Rather Jack",
+  "notes": "Produced by Stock Aitken Waterman for PWL. It reached UK No. 8 and the Top 10 across Europe, and was the sisters' only hit.",
+  "genre": "Hi-NRG / Pop",
+  "year": 1989
+ },
+ {
+  "cat": 109,
+  "artist": "Jason Donovan",
+  "title": "Too Many Broken Hearts",
+  "notes": "Written and produced by Stock Aitken Waterman, and the third single from Ten Good Reasons. It spent two weeks at UK No. 1 in March 1989, his first chart-topper on his own after the duet \"Especially for You\" with Kylie Minogue.",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 110,
+  "artist": "Donna Summer",
+  "title": "This Time I Know It's For Real",
+  "notes": "Lead single from Another Place and Time, written and produced by Stock Aitken Waterman with a writing credit for Summer. It reached UK No. 3, her first UK Top 10 hit since 1979, and No. 7 in the US.",
+  "genre": "Dance-pop / Hi-NRG",
+  "year": 1989
+ },
+ {
+  "cat": 111,
+  "artist": "Tanita Tikaram",
+  "title": "World Outside Your Window",
+  "notes": "The fourth and last single from the debut album Ancient Heart, released in February 1989. It reached only UK No. 58, though the album reached No. 3.",
+  "genre": "Folk pop",
+  "year": 1989
+ },
+ {
+  "cat": 112,
+  "artist": "Travelling Wilburys",
+  "title": "End Of The Line",
+  "notes": "Second single from the first Traveling Wilburys album. Roy Orbison features on the choruses; he died in December 1988, before the video was shot. It reached UK No. 52.",
+  "genre": "Folk rock / Country rock",
+  "year": 1989
+ },
+ {
+  "cat": 113,
+  "artist": "Jakie Quartz",
+  "title": "A La Vie, A L'Amour",
+  "notes": "Released in France in 1987 (No. 30), with words by Quartz and music by Gérard Anfosso. A Stock Aitken Waterman remix briefly charted in the UK in 1989, peaking at No. 55.",
+  "genre": "Europop",
+  "year": 1987
+ },
+ {
+  "cat": 114,
+  "artist": "Madonna",
+  "title": "Like A Prayer",
+  "notes": "Co-written and co-produced by Patrick Leonard. A Pepsi advert using the song was dropped after the controversial video. It reached No. 1 in the UK, US, Australia, Canada and Ireland.",
+  "genre": "Pop",
+  "year": 1989
+ },
+ {
+  "cat": 115,
+  "artist": "Kim Wilde",
+  "title": "Love In The Natural Way",
+  "notes": "Fifth and final single from Kim Wilde's sixth album Close, released in February 1989. It reached UK No. 32.",
+  "genre": "Pop / Synth-pop",
+  "year": 1989
+ },
+ {
+  "cat": 116,
+  "artist": "Chanelle",
+  "title": "One Man",
+  "notes": "A New Jersey singer from the same club scene as Adeva, Frankie Knuckles and David Morales. It was her only hit, reportedly reaching UK No. 16 in spring 1989 (one blog source).",
+  "genre": "House / Dance",
+  "year": 1989
+ },
+ {
+  "cat": 117,
+  "artist": "Yello",
+  "title": "Of Course I'm Lying",
+  "notes": "Third single from the album Flag, released in March 1989. It reached UK No. 23 and spent eight weeks on the chart.",
+  "genre": "Electronic / Synth-pop",
+  "year": 1989
+ },
+ {
+  "cat": 118,
+  "artist": "Ellis Beggs & Howard",
+  "title": "Big Bubbles No Troubles",
+  "notes": "The trio's first single, from Simon Ellis, Austin Howard and Nick Beggs, formerly of Kajagoogoo. It reached UK No. 41 in 1988.",
+  "genre": "Pop / Synth-pop",
+  "year": 1988
+ },
+ {
+  "cat": 119,
+  "artist": "Fuzzbox",
+  "title": "International Rescue",
+  "notes": "From the album Big Bang! by We've Got a Fuzzbox and We're Gonna Use It. It reached UK No. 11, the first of three Top 30 hits for them in 1989.",
+  "genre": "Pop / Rock",
+  "year": 1989
+ },
+ {
+  "cat": 120,
+  "artist": "Kym Mazelle",
+  "title": "Got To Get You Back",
+  "notes": "Released in March 1989 on Syncopate, soon after her UK No. 7 duet \"Wait\". It reached UK No. 29.",
+  "genre": "House / Dance",
+  "year": 1989
+ },
+ {
+  "cat": 121,
+  "artist": "Holly Johnson",
+  "title": "Americanos",
+  "notes": "Second single from Holly Johnson's debut solo album Blast, released in March 1989. It reached UK No. 4, matching \"Love Train\".",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
  }
 ];
