@@ -968,5 +968,447 @@ window.SINGLES = [
   "notes": "Second single from Holly Johnson's debut solo album Blast, released in March 1989. It reached UK No. 4, matching \"Love Train\".",
   "genre": "Pop / Dance-pop",
   "year": 1989
+ },
+ {
+  "cat": 125,
+  "artist": "Roy Orbison",
+  "title": "She's A Mystery To Me",
+  "notes": "Written by Bono and The Edge and produced by Bono, released in February 1989 from the posthumous album Mystery Girl after Orbison's death in December 1988. It reportedly reached UK No. 27 (one source).",
+  "genre": "Rock / Pop ballad",
+  "year": 1989
+ },
+ {
+  "cat": 126,
+  "artist": "INXS",
+  "title": "Mystify",
+  "notes": "Written by Michael Hutchence with Andrew and Tim Farriss and released in March 1989 as the last single from Kick. It reached UK No. 14.",
+  "genre": "Rock / Funk rock",
+  "year": 1989
+ },
+ {
+  "cat": 127,
+  "artist": "Pat & Mick",
+  "title": "I Haven't Stopped Dancing Yet",
+  "notes": "A 1989 charity single for Capital Radio's Help a London Child, produced by Stock Aitken Waterman. A cover of Gonzalez's 1979 hit (UK No. 15), it did better, reaching UK No. 9.",
+  "genre": "Pop / Charity single",
+  "year": 1989
+ },
+ {
+  "cat": 128,
+  "artist": "Aswad",
+  "title": "Beauty's Only Skin Deep",
+  "notes": "A reggae version of the Temptations' 1966 hit, released in April 1989 on Mango after Aswad's 1988 UK No. 1 \"Don't Turn Around\". It reached UK No. 31.",
+  "genre": "Reggae",
+  "year": 1989
+ },
+ {
+  "cat": 129,
+  "artist": "Simply Red",
+  "title": "If You Don't Know Me By Now",
+  "notes": "A cover of Harold Melvin & the Blue Notes' 1972 hit, written by Kenny Gamble and Leon Huff. It reached UK No. 2 and was a US No. 1, and won the writers a Grammy for Best R&B Song.",
+  "genre": "Blue-eyed soul / R&B",
+  "year": 1989
+ },
+ {
+  "cat": 130,
+  "artist": "Brother Beyond",
+  "title": "Can You Keep A Secret",
+  "notes": "A 1989 remix of a track the band first released in 1987, when it reached only UK No. 56. The remix reached No. 22 in April 1989, and the band wrote it themselves.",
+  "genre": "Pop",
+  "year": 1989
+ },
+ {
+  "cat": 131,
+  "artist": "Bangles",
+  "title": "Eternal Flame",
+  "notes": "Written by Tom Kelly, Susanna Hoffs and Billy Steinberg and released in January 1989. It reached No. 1 in both the UK and the US, and was the Bangles' only UK chart-topper.",
+  "genre": "Pop rock / Ballad",
+  "year": 1989
+ },
+ {
+  "cat": 132,
+  "artist": "U2 with BB King",
+  "title": "When Love Comes To Town",
+  "notes": "Third single from Rattle and Hum, recorded at Sun Studio in Memphis with blues legend B.B. King. It reached UK No. 6 and US No. 68.",
+  "genre": "Blues rock",
+  "year": 1989
+ },
+ {
+  "cat": 133,
+  "artist": "Bobby Brown",
+  "title": "Don't Be Cruel",
+  "notes": "Written and produced by Babyface and L.A. Reid with Daryl Simmons, and the title track of Brown's second album. It reached No. 8 in the US and topped the R&B chart for two weeks. A re-edit reportedly reached UK No. 13 in April 1989.",
+  "genre": "New jack swing / R&B",
+  "year": 1988
+ },
+ {
+  "cat": 134,
+  "artist": "Midnight Oil",
+  "title": "Beds Are Burning",
+  "notes": "From the album Diesel and Dust, partly inspired by the band's tour of Aboriginal communities in the outback. It reached UK No. 6.",
+  "genre": "Rock",
+  "year": 1987
+ },
+ {
+  "cat": 135,
+  "artist": "Mike & The Mechanics",
+  "title": "Nobody Knows",
+  "notes": "Released as a single in April 1989 after the success of \"The Living Years\". It only reached UK No. 81.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 136,
+  "artist": "Philip Bailey and Little Richard",
+  "title": "Twins",
+  "notes": "Recorded for the 1988 film Twins and nominated for a Golden Globe for Best Original Song. Little Richard guests alongside Earth, Wind & Fire's Philip Bailey.",
+  "genre": "Pop / R&B",
+  "year": 1988
+ },
+ {
+  "cat": 137,
+  "artist": "Swing Out Sister",
+  "title": "You On My Mind",
+  "notes": "Lead single from the second album Kaleidoscope World, written by Andy Connell, Corinne Drewery and Paul Staveley O'Duffy, who also produced it. It reached UK No. 28.",
+  "genre": "Sophisti-pop",
+  "year": 1989
+ },
+ {
+  "cat": 138,
+  "artist": "De La Soul",
+  "title": "Me Myself And I",
+  "notes": "Released on Tommy Boy in 1989 and built on a sample of Funkadelic's \"(Not Just) Knee Deep\". The group's only US R&B No. 1, and it reached UK No. 22.",
+  "genre": "Hip hop",
+  "year": 1989
+ },
+ {
+  "cat": 139,
+  "artist": "Debbie Gibson",
+  "title": "Electric Youth",
+  "notes": "Released in the UK in April 1989. It reached No. 11 in the US and reportedly No. 14 in the UK (one fan source).",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 140,
+  "artist": "Kon Kan",
+  "title": "I Beg Your Pardon",
+  "notes": "First released in 1988 on a small Toronto label, then re-released in spring 1989. It samples Lynn Anderson's \"Rose Garden\" and won the Juno Award for Best Dance Recording. A UK Top 5 hit.",
+  "genre": "Synth-pop / Dance",
+  "year": 1988
+ },
+ {
+  "cat": 141,
+  "artist": "Kylie Minogue",
+  "title": "Hand On Your Heart",
+  "notes": "Lead single from Enjoy Yourself, written and produced by Stock Aitken Waterman and released in April 1989. It went to UK No. 1, her third chart-topper, until the Hillsborough charity single knocked it off.",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 142,
+  "artist": "Diana Ross",
+  "title": "Workin' Overtime",
+  "notes": "Lead single from the album of the same name, written by Christopher Max and Nile Rodgers, who also produced it. It reached UK No. 32 and No. 3 on the US R&B chart.",
+  "genre": "R&B / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 143,
+  "artist": "Hue And Cry",
+  "title": "Violently",
+  "notes": "Released as the Violently EP in 1989 by the Scottish brothers Pat and Greg Kane. It reached UK No. 21.",
+  "genre": "Sophisti-pop",
+  "year": 1989
+ },
+ {
+  "cat": 144,
+  "artist": "Edelweiss",
+  "title": "Bring Me Edelweiss",
+  "notes": "An Austrian studio group whose vocals were sung by folk singer Maria Mathis. First released in late 1988, it reached UK No. 5 in 1989 and No. 1 in Austria and Switzerland.",
+  "genre": "Europop / Novelty dance",
+  "year": 1988
+ },
+ {
+  "cat": 145,
+  "artist": "Aretha Franklin & Elton John",
+  "title": "Through The Storm",
+  "notes": "The title track of Aretha's album, written by Albert Hammond and Diane Warren and produced by Narada Michael Walden. It reached UK No. 41 and US No. 16.",
+  "genre": "Pop / Soul ballad",
+  "year": 1989
+ },
+ {
+  "cat": 146,
+  "artist": "Natalie Cole",
+  "title": "Miss You Like Crazy",
+  "notes": "Lead single from Good to Be Back, written by Michael Masser, Gerry Goffin and Preston Glass, with Masser producing. It reached UK No. 2, Cole's biggest UK hit, and US No. 7.",
+  "genre": "Pop / Soul ballad",
+  "year": 1989
+ },
+ {
+  "cat": 147,
+  "artist": "Paul McCartney",
+  "title": "My Brave Face",
+  "notes": "Co-written with Elvis Costello and the lead single from Flowers in the Dirt. It reached UK No. 18 and US No. 25.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 148,
+  "artist": "Stevie Nicks",
+  "title": "Rooms On Fire",
+  "notes": "Co-written with Rick Nowels and produced by Rupert Hine. It reached UK No. 16, her first solo UK Top 40 hit and still her highest there, and US No. 16.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 149,
+  "artist": "Various",
+  "title": "Ferry 'Cross The Mersey",
+  "notes": "Charity record for the Hillsborough Disaster Fund. A cover of Gerry Marsden's 1964 song (UK No. 8 for Gerry and the Pacemakers), recorded by the Christians, Holly Johnson, Paul McCartney, Gerry Marsden and Stock Aitken Waterman. It reached UK No. 1 in May 1989.",
+  "genre": "Pop / Charity single",
+  "year": 1989
+ },
+ {
+  "cat": 150,
+  "artist": "Shakin' Stevens",
+  "title": "Love Attack",
+  "notes": "Released in May 1989 as the lead single from the album There Are Two Kinds of Music... Rock 'n' Roll. It reached the UK Top 30.",
+  "genre": "Rock and roll revival",
+  "year": 1989
+ },
+ {
+  "cat": 151,
+  "artist": "Fuzzbox",
+  "title": "Pink Sunshine",
+  "notes": "From the album Big Bang! by We've Got a Fuzzbox and We're Gonna Use It. It followed \"International Rescue\" and reached UK No. 14.",
+  "genre": "Pop / Rock",
+  "year": 1989
+ },
+ {
+  "cat": 152,
+  "artist": "Bobby Brown",
+  "title": "Every Little Step",
+  "notes": "Fourth single from Don't Be Cruel, written by L.A. Reid and Babyface. It reached UK No. 6, US No. 3 and No. 1 on the R&B chart, and earned Brown his first Grammy.",
+  "genre": "New jack swing / R&B",
+  "year": 1989
+ },
+ {
+  "cat": 153,
+  "artist": "Sam Brown",
+  "title": "Can I Get A Witness",
+  "notes": "A cover of Marvin Gaye's song that was included on the CD edition of her debut album Stop! and released as a single in 1989. It reached No. 17 in Australia.",
+  "genre": "Soul / Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 154,
+  "artist": "Cliff Richard",
+  "title": "The Best Of Me",
+  "notes": "Written by David Foster and released in May 1989 as Cliff's 100th single. It went in at UK No. 2 and peaked there.",
+  "genre": "Pop",
+  "year": 1989
+ },
+ {
+  "cat": 155,
+  "artist": "Jason Donovan",
+  "title": "Sealed With A Kiss",
+  "notes": "A cover of Brian Hyland's 1962 hit, written by Peter Udell and Gary Geld. It went straight in at UK No. 1 for two weeks, while his album Ten Good Reasons was also No. 1.",
+  "genre": "Pop",
+  "year": 1989
+ },
+ {
+  "cat": 156,
+  "artist": "Neneh Cherry",
+  "title": "Manchild",
+  "notes": "Second single from Raw Like Sushi, written by Neneh Cherry, 3D (Robert Del Naja) and Cameron McVey. A UK Top 10 hit, reportedly No. 5 (one chart database).",
+  "genre": "Hip hop / Pop",
+  "year": 1989
+ },
+ {
+  "cat": 157,
+  "artist": "Robert Palmer",
+  "title": "Change His Ways",
+  "notes": "Fourth single from the album Heavy Nova, written and produced by Palmer himself. It reached UK No. 28.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 158,
+  "artist": "Sinitta",
+  "title": "Right Back Where We Started From",
+  "notes": "A cover of Maxine Nightingale's 1975 hit (UK No. 8, US No. 2), written by Pierre Tubbs and J. Vincent Edwards. Sinitta's version was the lead single from Wicked and reached UK No. 4.",
+  "genre": "Hi-NRG / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 159,
+  "artist": "The Beautiful South",
+  "title": "Song For Whoever",
+  "notes": "Written by Paul Heaton and Dave Rotheray and released in June 1989 as the first single from Welcome to the Beautiful South. It reached UK No. 2.",
+  "genre": "Indie pop",
+  "year": 1989
+ },
+ {
+  "cat": 160,
+  "artist": "Tone Loc",
+  "title": "Funky Cold Medina",
+  "notes": "Second single from Loc-ed After Dark, co-written with Young MC, following \"Wild Thing\". It reached UK No. 13 and US No. 3.",
+  "genre": "Hip hop",
+  "year": 1989
+ },
+ {
+  "cat": 161,
+  "artist": "Gladys Knight",
+  "title": "Licence To Kill",
+  "notes": "Theme to the James Bond film of the same name, written by Narada Michael Walden, Jeffrey Cohen and Walter Afanasieff. It reached UK No. 6 and topped the Swedish chart for eight weeks.",
+  "genre": "Pop / Soul (Bond theme)",
+  "year": 1989
+ },
+ {
+  "cat": 162,
+  "artist": "Bangles",
+  "title": "Be With You",
+  "notes": "Released as a single in 1989 from the album Everything, following \"Eternal Flame\". It reached No. 30 in the US, their last US Top 40 hit.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 163,
+  "artist": "Enya",
+  "title": "Storms In Africa",
+  "notes": "The single was \"Storms in Africa (Part II)\", a rearranged version with English lyrics of the Watermark track. Written by Enya and Roma Ryan and produced by Nicky Ryan, it reached UK No. 41.",
+  "genre": "New age / Celtic",
+  "year": 1989
+ },
+ {
+  "cat": 164,
+  "artist": "Waterfront",
+  "title": "Cry",
+  "notes": "By the British duo Phil Cilia and Chris Duffy. It stalled at UK No. 89 in 1988, then reached No. 17 in the UK on a May 1989 remix and No. 10 in the US.",
+  "genre": "Pop rock / Ballad",
+  "year": 1988
+ },
+ {
+  "cat": 165,
+  "artist": "Cyndi Lauper",
+  "title": "I Drove All Night",
+  "notes": "Written by Billy Steinberg and Tom Kelly, and originally intended for Roy Orbison. Lead single from A Night to Remember, it reached US No. 6 and reportedly UK No. 7 (one blog).",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 166,
+  "artist": "Prince",
+  "title": "Batdance",
+  "notes": "From the Batman film soundtrack and released two weeks before the album. It was Prince's fourth US No. 1 and reached UK No. 2.",
+  "genre": "Funk / Pop",
+  "year": 1989
+ },
+ {
+  "cat": 167,
+  "artist": "Tom Petty",
+  "title": "I Won't Back Down",
+  "notes": "Co-written with Jeff Lynne as the lead single from Full Moon Fever. George Harrison sings and plays guitar on it and appears in the video. It reached No. 12 in the US.",
+  "genre": "Rock / Heartland rock",
+  "year": 1989
+ },
+ {
+  "cat": 168,
+  "artist": "Glenn Miller",
+  "title": "In The Mood",
+  "notes": "Recorded by the Glenn Miller Orchestra in August 1939 and released that September. Joe Garland and Andy Razaf are the credited writers. It topped the US charts, and a 1976 maxi single with \"Moonlight Serenade\" reached UK No. 13.",
+  "genre": "Big band / Swing",
+  "year": 1939
+ },
+ {
+  "cat": 169,
+  "artist": "Danny Wilson",
+  "title": "The Second Summer Of Love",
+  "notes": "Written by Gary Clark and taken from the album Bebop Moptop, released in June 1989. It reached UK No. 23, following the band's \"Mary's Prayer\".",
+  "genre": "Pop / Sophisti-pop",
+  "year": 1989
+ },
+ {
+  "cat": 170,
+  "artist": "Elton John & Kiki Dee",
+  "title": "Don't Go Breaking My Heart",
+  "notes": "Written by Elton John and Bernie Taupin under the pseudonyms Ann Orson and Carte Blanche, first as a duet for Dusty Springfield. It spent six weeks at UK No. 1 and was Elton's first UK chart-topper.",
+  "genre": "Pop",
+  "year": 1976
+ },
+ {
+  "cat": 171,
+  "artist": "Eagles",
+  "title": "Hotel California",
+  "notes": "Music by Don Felder and lyrics by Don Henley and Glenn Frey. It topped the US chart in May 1977 and won the Grammy for Record of the Year. It reportedly reached UK No. 8 (one source).",
+  "genre": "Rock / Soft rock",
+  "year": 1977
+ },
+ {
+  "cat": 172,
+  "artist": "Ronin Scott's M",
+  "title": "Pop Muzik",
+  "notes": "Robin Scott's project M. It reached UK No. 2 in 1979, held off the top by Art Garfunkel's \"Bright Eyes\", and went to No. 1 in the US.",
+  "genre": "New wave / Synth-pop",
+  "year": 1979,
+  "aka": "Robin Scott's M"
+ },
+ {
+  "cat": 173,
+  "artist": "Sonia",
+  "title": "You'll Never Stop Me Loving You",
+  "notes": "Sonia's debut single, written and produced by Stock Aitken Waterman. It went to UK No. 1 in July 1989 when she was 18, and was her only chart-topper.",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 174,
+  "artist": "Kon Kan",
+  "title": "Harry Houdini",
+  "notes": "Second single from the album Move to Move. It only reached UK No. 88, but made No. 14 in New Zealand.",
+  "genre": "Synth-pop / Dance",
+  "year": 1989
+ },
+ {
+  "cat": 175,
+  "artist": "Nat King Cole",
+  "title": "Those Lazy Hazt Crazy Days Of Summer",
+  "notes": "Written by Hans Carste, with English lyrics by Charles Tobias, from the German song \"Du spielst 'ne tolle Rolle\". Cole's 1963 version, arranged by Ralph Carmichael, reached No. 6 in the US.",
+  "genre": "Easy listening / Vocal pop",
+  "year": 1963,
+  "aka": "Those Lazy Hazy Crazy Days Of Summer"
+ },
+ {
+  "cat": 176,
+  "artist": "Luther Vandross",
+  "title": "Any Love",
+  "notes": "Lead single from the album Any Love, released in August 1988. It reached UK No. 31 and topped the US R&B chart, his fourth No. 1 there.",
+  "genre": "R&B / Soul",
+  "year": 1988
+ },
+ {
+  "cat": 177,
+  "artist": "Bobby Brown",
+  "title": "On Our Own",
+  "notes": "Recorded for the film Ghostbusters II and written by L.A. Reid, Babyface and Daryl Simmons. It reached No. 2 in the US and was a UK Top 5 hit.",
+  "genre": "New jack swing / R&B",
+  "year": 1989
+ },
+ {
+  "cat": 178,
+  "artist": "Gloria Estefan",
+  "title": "Don't Wanna Lose You",
+  "notes": "Lead single from her first solo album Cuts Both Ways, and her first release without the Miami Sound Machine. It reached UK No. 6 and was her second US No. 1.",
+  "genre": "Latin pop / Ballad",
+  "year": 1989
+ },
+ {
+  "cat": 179,
+  "artist": "Eartha Kitt & Bronski Beat",
+  "title": "Cha Cha Heels",
+  "notes": "A tribute to the drag star Divine, written by Steve Bronski and Larry Steinbachek and released in June 1989. It reached UK No. 32.",
+  "genre": "Dance / Hi-NRG",
+  "year": 1989
  }
 ];
