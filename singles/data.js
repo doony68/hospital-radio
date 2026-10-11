@@ -797,7 +797,7 @@ window.SINGLES = [
   "cat": 100,
   "artist": "Sam Brown",
   "title": "Stop!",
-  "notes": "Brown's debut single flopped at UK No. 52 in 1988, then reached No. 4 when re-released in January 1989. She's the daughter of Joe Brown and Vicki Brown.",
+  "notes": "The title track of her debut album flopped at UK No. 52 in 1988, then reached No. 4 when re-released in January 1989. She's the daughter of Joe Brown and Vicki Brown.",
   "genre": "Pop rock / Soul",
   "year": 1988
  },
