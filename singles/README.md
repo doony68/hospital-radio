@@ -20,5 +20,5 @@ The data lives in `data.js` as one object per single:
 - `aka` (optional) holds a corrected spelling so searches still find the record, e.g. "Freeez".
 - Leave `notes` as `""` to flag a single as needing research.
 
-The data is a snapshot of the "Singles Catalogue - Researched" Google Sheet. To refresh it,
+The data is a snapshot of the "Singles Catalogue" Google Sheet. To refresh it,
 ask Claude to re-read the sheet and regenerate `data.js`.
