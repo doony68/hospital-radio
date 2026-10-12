@@ -173,7 +173,7 @@ window.SINGLES = [
   "cat": 22,
   "artist": "Freeez",
   "title": "IOU",
-  "notes": "Correct spelling is Freeez: a jazz-funk dance band formed by John Rocca. Their biggest hit reached UK No. 2 in 1983 and topped the US dance chart.",
+  "notes": "Correct spelling is Freeez: a jazz-funk dance band formed by John Rocca. It reached UK No. 2 in 1983 and topped the US dance chart.",
   "genre": "Jazz-funk / Electro-funk",
   "year": 1983
  },
@@ -891,7 +891,7 @@ window.SINGLES = [
  },
  {
   "cat": 112,
-  "artist": "Travelling Wilburys",
+  "artist": "Traveling Wilburys",
   "title": "End Of The Line",
   "notes": "Second single from the first Traveling Wilburys album. Roy Orbison features on the choruses; he died in December 1988, before the video was shot. It reached UK No. 52.",
   "genre": "Folk rock / Country rock",
@@ -1127,7 +1127,8 @@ window.SINGLES = [
   "title": "Bring Me Edelweiss",
   "notes": "An Austrian studio group whose vocals were sung by folk singer Maria Mathis. First released in late 1988, it reached UK No. 5 in 1989 and No. 1 in Austria and Switzerland.",
   "genre": "Europop / Novelty dance",
-  "year": 1988
+  "year": 1988,
+  "aka": "Bringe Me Edelweiss"
  },
  {
   "cat": 145,
@@ -1373,11 +1374,10 @@ window.SINGLES = [
  {
   "cat": 175,
   "artist": "Nat King Cole",
-  "title": "Those Lazy Hazt Crazy Days Of Summer",
+  "title": "Those Lazy Hazy Crazy Days Of Summer",
   "notes": "Written by Hans Carste, with English lyrics by Charles Tobias, from the German song \"Du spielst 'ne tolle Rolle\". Cole's 1963 version, arranged by Ralph Carmichael, reached No. 6 in the US.",
   "genre": "Easy listening / Vocal pop",
-  "year": 1963,
-  "aka": "Those Lazy Hazy Crazy Days Of Summer"
+  "year": 1963
  },
  {
   "cat": 176,
@@ -1410,5 +1410,1183 @@ window.SINGLES = [
   "notes": "A tribute to the drag star Divine, written by Steve Bronski and Larry Steinbachek and released in June 1989. It reached UK No. 32.",
   "genre": "Dance / Hi-NRG",
   "year": 1989
+ },
+ {
+  "cat": 180,
+  "artist": "Simply Red",
+  "title": "A New Flame",
+  "notes": "Written by Mick Hucknall and produced by Stewart Levine, released in June 1989. It reached UK No. 17.",
+  "genre": "Blue-eyed soul / Pop",
+  "year": 1989
+ },
+ {
+  "cat": 181,
+  "artist": "One 2 Many",
+  "title": "Downtown",
+  "notes": "By a Norwegian-Swedish group, first released in October 1988 (UK No. 65) and re-issued in May 1989, when it reached UK No. 43. It went to No. 1 in Norway and No. 37 in the US.",
+  "genre": "Europop / Synth-pop",
+  "year": 1988
+ },
+ {
+  "cat": 182,
+  "artist": "London Boys",
+  "title": "London Nights",
+  "notes": "By the duo Edem Ephraim and Dennis Fuller, formed as a vehicle for German producer Ralf-Rene Maue. It reached UK No. 2 and was No. 1 in Finland.",
+  "genre": "Hi-NRG / Europop",
+  "year": 1989
+ },
+ {
+  "cat": 183,
+  "artist": "Kylie Minogue",
+  "title": "Wouldn't Change A Thing",
+  "notes": "Written by Stock Aitken Waterman and released in July 1989. It went in at UK No. 2 and stayed there for two weeks.",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 184,
+  "artist": "Jive Bunny and the Mastermixers",
+  "title": "Swing The Mood",
+  "notes": "A megamix opening with Glenn Miller's \"In the Mood\", then \"Rock Around the Clock\" and \"Tutti Frutti\". Five weeks at UK No. 1 and the second best-selling single of 1989.",
+  "genre": "Novelty / Megamix",
+  "year": 1989
+ },
+ {
+  "cat": 185,
+  "artist": "Fuzzbox",
+  "title": "Self",
+  "notes": "From the album Big Bang! by We've Got a Fuzzbox and We're Gonna Use It. It reached UK No. 24.",
+  "genre": "Pop / Rock",
+  "year": 1989
+ },
+ {
+  "cat": 186,
+  "artist": "Don Henley",
+  "title": "The End Of The Innocence",
+  "notes": "Co-written and co-produced with Bruce Hornsby, who also plays piano. It reached No. 8 in the US.",
+  "genre": "Rock / Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 187,
+  "artist": "BB King",
+  "title": "Ain't Nobody Home",
+  "notes": "Written by Jerry Ragovoy and first released in 1971 from the album B.B. King in London, when it reached US No. 46. It reportedly charted at UK No. 88 in 1989 (one source).",
+  "genre": "Blues",
+  "year": 1971
+ },
+ {
+  "cat": 188,
+  "artist": "Shakespear's Sister",
+  "title": "You're History",
+  "notes": "Second single from the debut album Sacred Heart, and the first release as the duo Siobhan Fahey and Marcella Detroit. It reached UK No. 7.",
+  "genre": "Pop / Alternative",
+  "year": 1989
+ },
+ {
+  "cat": 189,
+  "artist": "The Chosen",
+  "title": "Sound Of The Dream",
+  "notes": "",
+  "genre": "",
+  "year": null
+ },
+ {
+  "cat": 190,
+  "artist": "Martika",
+  "title": "Toy Soldiers",
+  "notes": "Released in April 1989, with the children's chorus sung by her former Kids Incorporated castmates. It reached UK No. 5 and was her only US No. 1.",
+  "genre": "Pop",
+  "year": 1989
+ },
+ {
+  "cat": 191,
+  "artist": "Cyndi Lauper",
+  "title": "My First Night Without You",
+  "notes": "Second single from A Night to Remember, written with Billy Steinberg and Tom Kelly. It was a weaker follow-up to \"I Drove All Night\", reaching US No. 62 and reportedly UK No. 53 (one source).",
+  "genre": "Pop / Ballad",
+  "year": 1989
+ },
+ {
+  "cat": 192,
+  "artist": "Alice Cooper",
+  "title": "Poison",
+  "notes": "Written by Alice Cooper, Desmond Child and John McCurry for the album Trash. It reached UK No. 2 and US No. 7.",
+  "genre": "Hard rock",
+  "year": 1989
+ },
+ {
+  "cat": 193,
+  "artist": "The Lightning Seeds",
+  "title": "Pure",
+  "notes": "The Lightning Seeds' first single, written and produced by Ian Broudie and championed by John Peel. It reached UK No. 16 and No. 31 in the US.",
+  "genre": "Indie pop",
+  "year": 1989
+ },
+ {
+  "cat": 194,
+  "artist": "Aswad",
+  "title": "On & On",
+  "notes": "A non-album single that made the UK Top 20 in 1989.",
+  "genre": "Reggae",
+  "year": 1989
+ },
+ {
+  "cat": 195,
+  "artist": "Donna Allen",
+  "title": "Can We Talk",
+  "notes": "Reached only UK No. 80, with two weeks on the chart.",
+  "genre": "R&B / Dance-pop",
+  "year": null
+ },
+ {
+  "cat": 196,
+  "artist": "Spandau Ballet",
+  "title": "Be Free With Your Love",
+  "notes": "Second single from Heart Like a Sky, released in August 1989. It reached UK No. 42 and was the band's second straight single to miss the UK Top 40.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 197,
+  "artist": "Queen",
+  "title": "The Invisible Man",
+  "notes": "Written by Queen drummer Roger Taylor and released in August 1989 as the third single from The Miracle. It reached UK No. 12.",
+  "genre": "Rock / Synth-pop",
+  "year": 1989
+ },
+ {
+  "cat": 198,
+  "artist": "Tears For Fears",
+  "title": "Sowing The Seeds Of Love",
+  "notes": "First single from The Seeds of Love, a Beatles-influenced piece of psychedelic pop. It reached UK No. 5 and just missed the US top spot at No. 2.",
+  "genre": "Pop / Psychedelic pop",
+  "year": 1989
+ },
+ {
+  "cat": 199,
+  "artist": "Liza Minnelli",
+  "title": "Losing My Mind",
+  "notes": "A Stephen Sondheim song from the 1971 musical Follies, given a dance-pop makeover by the Pet Shop Boys. It reached UK No. 6, Minnelli's only UK Top 10 hit.",
+  "genre": "Pop / Hi-NRG",
+  "year": 1989
+ },
+ {
+  "cat": 200,
+  "artist": "Elton John",
+  "title": "Healing Hands",
+  "notes": "Written by Elton John and Bernie Taupin. It stalled at UK No. 45 in 1989, but a 1990 double A-side with \"Sacrifice\" spent five weeks at UK No. 1.",
+  "genre": "Pop rock / Ballad",
+  "year": 1989
+ },
+ {
+  "cat": 201,
+  "artist": "Diana Ross & Lionel Richie",
+  "title": "Endless Love",
+  "notes": "Written and produced by Lionel Richie for the 1981 film Endless Love. It spent nine weeks at US No. 1 and reached UK No. 7, and was Diana Ross's last Motown single.",
+  "genre": "Pop / Soul ballad",
+  "year": 1981
+ },
+ {
+  "cat": 202,
+  "artist": "The Monkees",
+  "title": "Daydream Believer",
+  "notes": "Written by John Stewart with Davy Jones on lead vocals. It was a US No. 1 in December 1967 and reached UK No. 5.",
+  "genre": "Pop / Pop rock",
+  "year": 1967
+ },
+ {
+  "cat": 203,
+  "artist": "Jason Donovan",
+  "title": "Every Day (I Love You More)",
+  "notes": "Fifth and final single from Ten Good Reasons, written and produced by Stock Aitken Waterman. It reached UK No. 2, kept from the top by Black Box's \"Ride on Time\", and was No. 1 in Ireland.",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 204,
+  "artist": "The Beatmasters",
+  "title": "Hey DJ / I Can't Dance To That Music You're Playing",
+  "notes": "Featuring Betty Boo in her breakthrough role, and based on Martha and the Vandellas' 1968 \"I Can't Dance to That Music You're Playin'\". It reached UK No. 7.",
+  "genre": "House / Hip house",
+  "year": 1989
+ },
+ {
+  "cat": 205,
+  "artist": "Cliff Richard",
+  "title": "I Just Don't Have The Heart",
+  "notes": "Written and produced by Stock Aitken Waterman as the second single from Stronger. It reached UK No. 3.",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 206,
+  "artist": "Eurythmics",
+  "title": "Revival",
+  "notes": "Lead single from We Too Are One, co-written with Charlie Wilson, formerly of the Gap Band, who sings backing vocals. It reached UK No. 26.",
+  "genre": "Pop rock / Funk",
+  "year": 1989
+ },
+ {
+  "cat": 207,
+  "artist": "Neneh Cherry",
+  "title": "Kisses On The Wind",
+  "notes": "Third single from Raw Like Sushi, released in July 1989. It reached UK No. 20.",
+  "genre": "Pop / R&B",
+  "year": 1989
+ },
+ {
+  "cat": 208,
+  "artist": "Aretha Franklin & Whitney Houston",
+  "title": "It Isn't It Wasn't It Ain't Never Gonna Be",
+  "notes": "Written by Albert Hammond and Diane Warren as the second single from Franklin's album Through the Storm. It reached UK No. 29 and No. 5 on the US R&B chart.",
+  "genre": "Soul / Pop",
+  "year": 1989
+ },
+ {
+  "cat": 209,
+  "artist": "Gloria Estefan",
+  "title": "Oye Mi Canto",
+  "notes": "From the album Cuts Both Ways, sung largely in Spanish. It reportedly reached UK No. 16 (one source) and No. 48 on the US Hot 100.",
+  "genre": "Latin pop",
+  "year": 1989
+ },
+ {
+  "cat": 210,
+  "artist": "Janet Jackson",
+  "title": "Miss You Much",
+  "notes": "Lead single from Rhythm Nation 1814, written and produced by Jimmy Jam and Terry Lewis. It spent four weeks at US No. 1, the longest-running No. 1 of 1989.",
+  "genre": "Dance-pop / New jack swing",
+  "year": 1989
+ },
+ {
+  "cat": 211,
+  "artist": "Black Box",
+  "title": "Ride On Time",
+  "notes": "Built on chopped-up vocals from Loleatta Holloway's \"Love Sensation\", which led to a legal settlement. It spent six weeks at UK No. 1 and was the year's best-selling UK single.",
+  "genre": "House",
+  "year": 1989
+ },
+ {
+  "cat": 212,
+  "artist": "Randy Crawford",
+  "title": "Knockin' On Heaven's Door",
+  "notes": "Bob Dylan's song, with Eric Clapton and David Sanborn on the recording, from the album Rich and Poor. It reached only UK No. 77, against No. 14 for Dylan's original.",
+  "genre": "Soul / Rock ballad",
+  "year": 1989
+ },
+ {
+  "cat": 213,
+  "artist": "Richard Marx",
+  "title": "Right Here Waiting",
+  "notes": "Second single from Repeat Offender, and Marx's third US No. 1 in a row. It spent three weeks at US No. 1 and reached UK No. 2.",
+  "genre": "Pop rock / Ballad",
+  "year": 1989
+ },
+ {
+  "cat": 214,
+  "artist": "Billy Joel",
+  "title": "We Didn't Start The Fire",
+  "notes": "Taken from Storm Front, a list of historical events and figures. It spent two weeks at US No. 1 in December 1989, Joel's third and last chart-topper there, and earned Grammy nominations for Record and Song of the Year.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 215,
+  "artist": "The Marines",
+  "title": "Say Goodbye",
+  "notes": "A short-lived act signed to CBS, with Helen Hoffner, Sarah Tomas and Denny Jones. This was one of three 1989 singles, none of which charted (one source only).",
+  "genre": "Pop",
+  "year": 1989
+ },
+ {
+  "cat": 216,
+  "artist": "The Blue Nile",
+  "title": "The Downtown Lights",
+  "notes": "Written by Paul Buchanan and produced by the band, the lead single from Hats. It reached only UK No. 67, but was their only US chart entry.",
+  "genre": "Sophisti-pop / Synth-pop",
+  "year": 1989
+ },
+ {
+  "cat": 217,
+  "artist": "Erasure",
+  "title": "Drama!",
+  "notes": "First single from Wild!, written by Vince Clarke and Andy Bell. The \"Guilty!\" shouts come from the Jesus and Mary Chain, who were recording next door. It reached UK No. 4.",
+  "genre": "Synth-pop",
+  "year": 1989
+ },
+ {
+  "cat": 218,
+  "artist": "Bobby Brown",
+  "title": "Rock Wit'Cha",
+  "notes": "Fifth and last single from Don't Be Cruel, written by Babyface, L.A. Reid and Daryl Simmons. It reached UK No. 33 and US No. 7.",
+  "genre": "New jack swing / R&B",
+  "year": 1989
+ },
+ {
+  "cat": 219,
+  "artist": "Sydney Youngblood",
+  "title": "If Only I Could",
+  "notes": "Lead single from the debut album Feeling Free, by the Texas-born, Germany-based singer. It reached UK No. 3 and was the 13th best-selling single of 1989.",
+  "genre": "House / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 220,
+  "artist": "Chris Rea",
+  "title": "The Road To Hell",
+  "notes": "The second part of a two-part title track, said to have been inspired by a long traffic jam on his way home from Heathrow. It reached UK No. 10, Rea's first UK Top 10 single, and the album topped the UK chart.",
+  "genre": "Rock",
+  "year": 1989
+ },
+ {
+  "cat": 221,
+  "artist": "Cliff Richard",
+  "title": "Lean On You",
+  "notes": "Third single from Stronger. It reached UK No. 17.",
+  "genre": "Pop",
+  "year": 1989
+ },
+ {
+  "cat": 222,
+  "artist": "Tracy Chapman",
+  "title": "Crossroads",
+  "notes": "Lead single from her second album, which went to UK No. 1. It reached only UK No. 61 and US No. 90.",
+  "genre": "Folk rock",
+  "year": 1989
+ },
+ {
+  "cat": 223,
+  "artist": "Jive Bunny and the Mastermixers",
+  "title": "That's What I Like",
+  "notes": "Released in October 1989, Jive Bunny's second No. 1, with three weeks at the top. It's built around The Ventures' \"Hawaii Five-O\" theme and includes Chubby Checker's \"The Twist\".",
+  "genre": "Novelty / Megamix",
+  "year": 1989
+ },
+ {
+  "cat": 224,
+  "artist": "Linda Ronstadt and Aaron Neville",
+  "title": "I Don't Know Much",
+  "notes": "Written by Barry Mann, Cynthia Weil and Tom Snow, and first recorded by Mann in 1980. This duet from Cry Like a Rainstorm, Howl Like the Wind reached No. 2 in both the UK and US.",
+  "genre": "Soft rock / Pop ballad",
+  "year": 1989
+ },
+ {
+  "cat": 225,
+  "artist": "New Kids On The Block",
+  "title": "You Got It (The Right Stuff)",
+  "notes": "Second single from Hangin' Tough, released in the US in November 1988 (US No. 3). It went to UK No. 1 on its second release in November 1989.",
+  "genre": "Teen pop",
+  "year": 1988
+ },
+ {
+  "cat": 226,
+  "artist": "Lisa Stansfield",
+  "title": "All Around The World",
+  "notes": "Stansfield's first UK No. 1, with two weeks at the top in November 1989, from the album Affection. It followed her guest vocal on Coldcut's \"People Hold On\".",
+  "genre": "Soul / Pop",
+  "year": 1989
+ },
+ {
+  "cat": 227,
+  "artist": "Milli Vanilli",
+  "title": "Girl I'm Gonna Miss You",
+  "notes": "Fourth single from the debut album, released in July 1989. It reached UK No. 2 and was a US No. 1. The duo were later revealed not to have sung on their records.",
+  "genre": "Pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 228,
+  "artist": "Kaoma",
+  "title": "Lambada",
+  "notes": "Kaoma's debut single, with lead vocals by Loalwa Braz. It reached UK No. 4, and is based on Los Kjarkas' \"Llorando se fue\", which led to a successful lawsuit.",
+  "genre": "World / Dance",
+  "year": 1989
+ },
+ {
+  "cat": 229,
+  "artist": "Jimmy Somerville",
+  "title": "Adieu",
+  "notes": "A duet with June Miles-Kingston, credited to Jack Gold, Arnold Goland and Serge Gainsbourg. The lead single from Read My Lips, it reached UK No. 14 and No. 3 in France.",
+  "genre": "Pop / Synth-pop",
+  "year": 1989,
+  "aka": "Comment Te Dire Adieu"
+ },
+ {
+  "cat": 230,
+  "artist": "Phil Collins",
+  "title": "Another Day In Paradise",
+  "notes": "Lead single from ...But Seriously, with David Crosby on backing vocals. It spent four weeks at US No. 1 and won the Grammy for Record of the Year.",
+  "genre": "Pop / Soft rock",
+  "year": 1989
+ },
+ {
+  "cat": 231,
+  "artist": "Ben Liebrand Remix",
+  "title": "The Eve Of The War",
+  "notes": "Ben Liebrand's remix of Jeff Wayne's track from The War of the Worlds. It reached UK No. 3 in December 1989.",
+  "genre": "Electronic / Remix",
+  "year": 1989,
+  "aka": "Jeff Wayne"
+ },
+ {
+  "cat": 232,
+  "artist": "Billy Joel",
+  "title": "Leningrad",
+  "notes": "Inspired by Joel's 1987 concerts in the Soviet Union, and released as a single in Europe only. It reached No. 66 in Germany.",
+  "genre": "Pop rock / Ballad",
+  "year": 1989
+ },
+ {
+  "cat": 233,
+  "artist": "Jive Bunny and the Mastermixers",
+  "title": "Let's Party and Auld Lang Syne",
+  "notes": "Jive Bunny's third UK No. 1 in a row. The UK version is built from Christmas hits including Wizzard's and Slade's.",
+  "genre": "Novelty / Megamix",
+  "year": 1989
+ },
+ {
+  "cat": 234,
+  "artist": "Lionel Bart",
+  "title": "Happy Endings (Give Yourself A Pinch)",
+  "notes": "Released in 1989 with an Abbey National building society TV advert, which Lionel Bart wrote and appeared in.",
+  "genre": "Pop / Showtunes",
+  "year": 1989
+ },
+ {
+  "cat": 235,
+  "artist": "Band Aid II",
+  "title": "Do They Know It's Christmas",
+  "notes": "Produced by Stock Aitken Waterman at Bob Geldof's request, with Kylie, Jason Donovan, Cliff Richard, Bros and others. The Christmas No. 1 for three weeks, and the last UK No. 1 of the 1980s.",
+  "genre": "Pop (charity single)",
+  "year": 1989
+ },
+ {
+  "cat": 236,
+  "artist": "Deacon Blue",
+  "title": "Queen Of The New Year",
+  "notes": "Fifth and final single from When the World Knows Your Name, released in December 1989. It reached UK No. 21 and No. 4 in Ireland.",
+  "genre": "Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 237,
+  "artist": "Electronic",
+  "title": "Getting Away With It",
+  "notes": "Written by Bernard Sumner, Johnny Marr and Neil Tennant and released in December 1989. It reached UK No. 12 and No. 38 on the US Hot 100.",
+  "genre": "Synth-pop",
+  "year": 1989
+ },
+ {
+  "cat": 238,
+  "artist": "New Kids On The Block",
+  "title": "Hangin' Tough",
+  "notes": "The title track of the group's second album, released in July 1989. It spent three weeks at UK No. 1 in January 1990.",
+  "genre": "Teen pop",
+  "year": 1989
+ },
+ {
+  "cat": 239,
+  "artist": "Carmel",
+  "title": "You Can Have Him",
+  "notes": "A 1990 single that reached UK No. 76.",
+  "genre": "Jazz-pop / Soul",
+  "year": 1990
+ },
+ {
+  "cat": 240,
+  "artist": "Kylie Minogue",
+  "title": "Tears On My Pillow",
+  "notes": "A cover of Little Anthony and the Imperials' 1958 doo-wop hit. It spent a week at UK No. 1 in January 1990 and was the last UK No. 1 produced by Stock Aitken Waterman.",
+  "genre": "Pop / Dance-pop",
+  "year": 1990
+ },
+ {
+  "cat": 241,
+  "artist": "And Why Not?",
+  "title": "The Face",
+  "notes": "By a pop trio from Birmingham, and the follow-up to \"Restless Days (She Screams Out Loud)\". It reached UK No. 13 in 1990.",
+  "genre": "Pop / Dance",
+  "year": 1990
+ },
+ {
+  "cat": 242,
+  "artist": "The Beloved",
+  "title": "Hello",
+  "notes": "Written by Jon Marsh and released in January 1990 as the second single from Happiness. It reached UK No. 19 and led to the band's first appearance on Top of the Pops.",
+  "genre": "Dance / House-pop",
+  "year": 1990
+ },
+ {
+  "cat": 243,
+  "artist": "49ers",
+  "title": "Touch Me",
+  "notes": "Released in December 1989 as the third single from the group's debut album. It reached UK No. 3 and samples Aretha Franklin's \"Rock-A-Lott\". Dawn Mitchell was later found to have lip-synced the vocals.",
+  "genre": "Italo house",
+  "year": 1989
+ },
+ {
+  "cat": 244,
+  "artist": "Del Amitri",
+  "title": "Nothing Every Happens",
+  "notes": "Written by Justin Currie about political apathy, and released on 1 January 1990. It reached UK No. 11, their biggest UK hit, and No. 4 in Ireland.",
+  "genre": "Pop rock",
+  "year": 1990,
+  "aka": "Nothing Ever Happens"
+ },
+ {
+  "cat": 245,
+  "artist": "Quincy Jones",
+  "title": "I'll Be Good To You",
+  "notes": "A re-make of the Brothers Johnson's 1976 hit (US No. 3), featuring Ray Charles and Chaka Khan. It reached UK No. 21 and US No. 18, and topped the R&B chart.",
+  "genre": "R&B / Funk",
+  "year": 1989
+ },
+ {
+  "cat": 246,
+  "artist": "Sinead O'Connor",
+  "title": "Nothing Compares 2 U",
+  "notes": "Written by Prince for The Family, who recorded it in 1985. O'Connor's version spent four weeks at UK No. 1 in early 1990 and was the year's second best-selling single.",
+  "genre": "Pop / Soul ballad",
+  "year": 1990
+ },
+ {
+  "cat": 247,
+  "artist": "Phil Collins",
+  "title": "I Wish It Would Rain Down",
+  "notes": "From ...But Seriously, with Eric Clapton on lead guitar and a gospel choir. It reached UK No. 7.",
+  "genre": "Pop rock / Blues",
+  "year": 1990
+ },
+ {
+  "cat": 248,
+  "artist": "Linda Ronstadt and Aaron Neville",
+  "title": "All My Life",
+  "notes": "Written by Karla Bonoff, and the duo's second single from Cry Like a Rainstorm, Howl Like the Wind. It won the Grammy for Best Pop Performance by a Duo or Group with Vocal, and topped the US Adult Contemporary chart.",
+  "genre": "Soft rock / Pop ballad",
+  "year": 1990
+ },
+ {
+  "cat": 249,
+  "artist": "Lea Salonga and Simon Bowman",
+  "title": "The Last Night Of The World",
+  "notes": "A duet from the 1989 London production of Miss Saigon, with music by Claude-Michel Schonberg. It was Lea Salonga's first UK chart entry, reaching No. 81 in March 1990.",
+  "genre": "Musical theatre / Ballad",
+  "year": 1990
+ },
+ {
+  "cat": 250,
+  "artist": "Chris Rea",
+  "title": "Tell Me There's A Heaven",
+  "notes": "Third single from The Road to Hell, released in January 1990. It reached UK No. 24.",
+  "genre": "Rock / Soft rock",
+  "year": 1990
+ },
+ {
+  "cat": 251,
+  "artist": "Gloria Estefan",
+  "title": "Get On Your Feet",
+  "notes": "From Cuts Both Ways, produced by Emilio Estefan, Jorge Casas and Clay Ostwald. It reached UK No. 23 and US No. 11.",
+  "genre": "Latin pop / Dance-pop",
+  "year": 1989
+ },
+ {
+  "cat": 252,
+  "artist": "Ramjam",
+  "title": "Black Betty",
+  "notes": "Huddie Ledbetter's (Lead Belly) song, arranged as a hard-rock single by Bill Bartlett. It reached UK No. 7 in 1977, and a 1990 Ben Liebrand remix reached No. 13.",
+  "genre": "Hard rock",
+  "year": 1977
+ },
+ {
+  "cat": 253,
+  "artist": "Beats International",
+  "title": "Dub Be Good To Me",
+  "notes": "Norman Cook's first big hit, with Lindy Layton on vocals. It borrows heavily from the SOS Band's \"Just Be Good to Me\" and the bassline of the Clash's \"The Guns of Brixton\". Four weeks at UK No. 1.",
+  "genre": "Dance / Breakbeat",
+  "year": 1990
+ },
+ {
+  "cat": 254,
+  "artist": "Rod Stewart",
+  "title": "Downtown Train",
+  "notes": "A cover of Tom Waits's song, released as a non-album single in late 1989. It caught fire after a Brit Awards performance and reached UK No. 10 and US No. 3.",
+  "genre": "Rock / Pop rock",
+  "year": 1989
+ },
+ {
+  "cat": 255,
+  "artist": "Eurythmics",
+  "title": "The King And Queen Of America",
+  "notes": "Third UK single from We Too Are One, released in January 1990, and not issued as a single in the US. It reached UK No. 29 (one listing).",
+  "genre": "Pop rock",
+  "year": 1990
+ },
+ {
+  "cat": 256,
+  "artist": "Jive Bunny and the Mastermixers",
+  "title": "That Sounds Good To Me",
+  "notes": "The follow-up to \"Let's Party\", which went in at UK No. 4 in March 1990.",
+  "genre": "Novelty / Megamix",
+  "year": 1990
+ },
+ {
+  "cat": 257,
+  "artist": "They Might Be Giants",
+  "title": "Birdhouse In Your Soul",
+  "notes": "Written by John Flansburgh and John Linnell, and the band's highest-charting single in both the UK and US. It reached the UK Top 10, and the US Modern Rock No. 3.",
+  "genre": "Alternative rock / Novelty",
+  "year": 1990
+ },
+ {
+  "cat": 258,
+  "artist": "Snap!",
+  "title": "The Power",
+  "notes": "Spent two weeks at UK No. 1 in spring 1990, the first rap-based record to top the UK chart. Penny Ford sang on it, but another woman mimed in the video.",
+  "genre": "Eurodance / Hip house",
+  "year": 1990
+ },
+ {
+  "cat": 259,
+  "artist": "UB40",
+  "title": "Kingston Town",
+  "notes": "A cover of Lord Creator's 1970 reggae song, the second single from Labour of Love II. It reached UK No. 4 and No. 1 in France and the Netherlands.",
+  "genre": "Reggae",
+  "year": 1990
+ },
+ {
+  "cat": 260,
+  "artist": "Erasure",
+  "title": "Blue Savannah",
+  "notes": "Written by Vince Clarke and Andy Bell and released in February 1990. It was Erasure's eighth UK Top 10 hit, reaching No. 3.",
+  "genre": "Synth-pop",
+  "year": 1990
+ },
+ {
+  "cat": 261,
+  "artist": "David A Stewart",
+  "title": "Lily Was Here",
+  "notes": "An instrumental duet from the soundtrack to the Dutch film De Kassiere. It reached UK No. 6, US No. 11 and No. 1 in the Netherlands.",
+  "genre": "Jazz-funk / Instrumental",
+  "year": 1989
+ },
+ {
+  "cat": 262,
+  "artist": "Madonna",
+  "title": "Vogue",
+  "notes": "Written and produced with Shep Pettibone and inspired by the New York dance craze of voguing. It was a UK and US No. 1 and the world's best-selling single of 1990.",
+  "genre": "Dance-pop / House",
+  "year": 1990
+ },
+ {
+  "cat": 263,
+  "artist": "Alannah Myles",
+  "title": "Black Velvet",
+  "notes": "Written by Christopher Ward and David Tyson. It reached UK No. 2 and topped the US Hot 100.",
+  "genre": "Blues rock",
+  "year": 1989
+ },
+ {
+  "cat": 264,
+  "artist": "Billy Joel",
+  "title": "I Got To Extremes",
+  "notes": "Second US single from Storm Front, released in January 1990. It reached UK No. 70, US No. 6 and Canada No. 3.",
+  "genre": "Pop rock",
+  "year": 1990,
+  "aka": "I Go To Extremes"
+ },
+ {
+  "cat": 265,
+  "artist": "Deborah Harry",
+  "title": "Sweet And Low",
+  "notes": "Fourth single from Harry's third solo album Def, Dumb & Blonde, released in March 1990. It reached UK No. 57 and No. 17 on the US dance chart.",
+  "genre": "New wave / Dance-pop",
+  "year": 1990
+ },
+ {
+  "cat": 266,
+  "artist": "Paula Abdul",
+  "title": "Opposites Attract",
+  "notes": "Final single from Forever Your Girl, with a rap credited to MC Skat Kat, the cartoon cat in the video. It topped the US chart for three weeks and reportedly reached UK No. 3 (one listing).",
+  "genre": "Pop / Dance-pop",
+  "year": 1990
+ },
+ {
+  "cat": 267,
+  "artist": "Queen",
+  "title": "Bohemian Rhapsody",
+  "notes": "Nine weeks at UK No. 1 from November 1975. Re-released in December 1991 after Freddie Mercury's death, it returned to No. 1 for five weeks, the first single ever to top the UK chart twice.",
+  "genre": "Rock / Progressive rock",
+  "year": 1975
+ },
+ {
+  "cat": 268,
+  "artist": "The Might Be Giants",
+  "title": "Istanbul (Not Constantinople)",
+  "notes": "A cover of the Four Lads' 1953 hit, released in May 1990 from the album Flood. It reached UK No. 61, and later found a new audience through Tiny Toon Adventures.",
+  "genre": "Alternative rock / Novelty",
+  "year": 1990,
+  "aka": "They Might Be Giants"
+ },
+ {
+  "cat": 269,
+  "artist": "New Order",
+  "title": "World In Motion",
+  "notes": "The official England song for the 1990 World Cup, credited to Englandneworder, with a rap by John Barnes and lyrics co-written by Keith Allen. Two weeks at UK No. 1, New Order's only chart-topper.",
+  "genre": "Synth-pop / Dance",
+  "year": 1990,
+  "aka": "Englandneworder"
+ },
+ {
+  "cat": 270,
+  "artist": "Wilson Phillips",
+  "title": "Hold On",
+  "notes": "Lead single from their debut album, written by Carnie Wilson, Chynna Phillips and Glen Ballard. It topped the US Hot 100 in June 1990 and reached UK No. 6.",
+  "genre": "Pop",
+  "year": 1990
+ },
+ {
+  "cat": 271,
+  "artist": "Craig McLachlan",
+  "title": "Mona",
+  "notes": "Bo Diddley's song, first the B-side of his 1957 single \"Hey! Bo Diddley\". The former Neighbours actor's version reached UK No. 2, held off the top by Elton John's \"Sacrifice\".",
+  "genre": "Pop rock",
+  "year": 1990
+ },
+ {
+  "cat": 272,
+  "artist": "River City People",
+  "title": "California Dreamin'",
+  "notes": "A double A-side with \"Carry the Blame\" and the Liverpool band's biggest hit, reaching UK No. 13. A cover of the Mamas & the Papas' 1965 song.",
+  "genre": "Folk rock / Pop",
+  "year": 1990
+ },
+ {
+  "cat": 273,
+  "artist": "Pavarotti",
+  "title": "Nessun Dorma",
+  "notes": "The aria from Puccini's opera Turandot, used as the BBC's theme for the 1990 World Cup. Pavarotti's recording reached UK No. 2, the highest placing for a classical single at the time.",
+  "genre": "Opera / Classical",
+  "year": 1990
+ },
+ {
+  "cat": 274,
+  "artist": "F.A.B featuring. MC Parker",
+  "title": "Thunderbirds Are Go",
+  "notes": "A 1990 euro house single on the Telstar label, built around the Thunderbirds theme.",
+  "genre": "Hip house / Novelty",
+  "year": 1990,
+  "aka": "FAB featuring MC Parker"
+ },
+ {
+  "cat": 275,
+  "artist": "Poison",
+  "title": "Unskinny Bop",
+  "notes": "First single from Flesh & Blood, released in June 1990. It reached US No. 3 and reportedly UK No. 15 (two secondary sources).",
+  "genre": "Glam metal / Hard rock",
+  "year": 1990
+ },
+ {
+  "cat": 276,
+  "artist": "Maxi Priest",
+  "title": "Close To You",
+  "notes": "Lead single from the album Bonafide, released in July 1990. It topped the US Hot 100 for a week, and reportedly reached UK No. 7 (one source).",
+  "genre": "Reggae fusion / Pop",
+  "year": 1990
+ },
+ {
+  "cat": 277,
+  "artist": "D.N.A. featuring Suzanne Vega",
+  "title": "Tom's Diner",
+  "notes": "DNA's 1990 remix of Suzanne Vega's a cappella \"Tom's Diner\" (1987), with a beat added. It started as a bootleg and was then officially released by A&M. It reached UK No. 2 and No. 1 in several European countries.",
+  "genre": "Dance / Remix",
+  "year": 1990
+ },
+ {
+  "cat": 278,
+  "artist": "Madonna",
+  "title": "Hanky Panky",
+  "notes": "Written and produced by Madonna and Patrick Leonard, and the second single from I'm Breathless. It reached US No. 10 and the UK Top 10.",
+  "genre": "Pop / Swing",
+  "year": 1990
+ },
+ {
+  "cat": 279,
+  "artist": "Bombalurina",
+  "title": "Itsy Bitsy Teeny Weeny Yellow Polka Dot Bikini",
+  "notes": "Timmy Mallett's chart-topper under the Bombalurina name, a cover of Brian Hyland's 1960 hit. It reached UK No. 1 in August 1990 and also topped the Irish chart.",
+  "genre": "Novelty / Pop",
+  "year": 1990
+ },
+ {
+  "cat": 280,
+  "artist": "MC Hammer",
+  "title": "U Can't Touch This",
+  "notes": "Built on the riff from Rick James's \"Super Freak\" (1981), which later earned James a songwriting credit. Second single from Please Hammer, Don't Hurt 'Em, it reached US No. 8 and topped the US R&B chart.",
+  "genre": "Hip hop / Pop rap",
+  "year": 1990
+ },
+ {
+  "cat": 281,
+  "artist": "Michael McDonald",
+  "title": "Tear It Up",
+  "notes": "Added to the album Take It to Heart only weeks before release because the label wanted another single. It reached No. 27 on the US Adult Contemporary chart.",
+  "genre": "Soft rock / Blue-eyed soul",
+  "year": 1990
+ },
+ {
+  "cat": 282,
+  "artist": "George Michael",
+  "title": "Praying For Time",
+  "notes": "Lead single from Listen Without Prejudice Vol. 1, released in August 1990. It reached UK No. 6 and was his last solo US No. 1.",
+  "genre": "Pop / Soft rock",
+  "year": 1990
+ },
+ {
+  "cat": 283,
+  "artist": "New Kids On The Block",
+  "title": "Tonight",
+  "notes": "From the album Step by Step, which went to No. 1 in both the US and the UK. The UK chart peak for this single was not found.",
+  "genre": "Pop / New jack swing",
+  "year": 1990
+ },
+ {
+  "cat": 284,
+  "artist": "Deacon Blue",
+  "title": "Four Bacharach & David Songs",
+  "notes": "A four-track EP of Burt Bacharach and Hal David songs, released in August 1990. Led by \"I'll Never Fall in Love Again\", it reached UK No. 2, the band's highest-placed single.",
+  "genre": "Pop rock",
+  "year": 1990
+ },
+ {
+  "cat": 285,
+  "artist": "Cliff Richard",
+  "title": "Silhouettes",
+  "notes": "A live recording from the Wembley concert album From a Distance: The Event, reaching UK No. 10. It is a cover of the Rays' 1957 doo-wop hit, a US No. 3.",
+  "genre": "Pop / Doo-wop",
+  "year": 1990
+ },
+ {
+  "cat": 286,
+  "artist": "Steve Miller Band",
+  "title": "The Joker",
+  "notes": "Originally a 1973 US No. 1. A 1990 Levi's advert sent it to UK No. 1 for two weeks, narrowly beating Deee-Lite's \"Groove Is in the Heart\" on the sales count.",
+  "genre": "Rock / Soft rock",
+  "year": 1973
+ },
+ {
+  "cat": 287,
+  "artist": "Maria McKee",
+  "title": "Show Me Heaven",
+  "notes": "Written for the Tom Cruise film Days of Thunder, released in June 1990. Four weeks at UK No. 1, and one of the year's biggest sellers.",
+  "genre": "Pop rock / Ballad",
+  "year": 1990
+ },
+ {
+  "cat": 288,
+  "artist": "London Beat",
+  "title": "I've Been Thinking About You",
+  "notes": "Released as Londonbeat in 1990, from the album In the Blood. It reached UK No. 2 and went to No. 1 in the US in early 1991.",
+  "genre": "Dance-pop / Soul",
+  "year": 1990,
+  "aka": "Londonbeat"
+ },
+ {
+  "cat": 289,
+  "artist": "Pet Shop Boys",
+  "title": "So Hard",
+  "notes": "From the album Behaviour, co-produced with Harold Faltermeyer. It reached UK No. 4, and the lyric reportedly came from a couple Neil Tennant knew who caught each other cheating.",
+  "genre": "Synth-pop",
+  "year": 1990
+ },
+ {
+  "cat": 290,
+  "artist": "D.N.A.",
+  "title": "La Serenissima",
+  "notes": "Appears to be a dance take on Rondò Veneziano's \"La Serenissima\", though sources did not confirm the sample. Reportedly UK No. 34 (one listing).",
+  "genre": "Dance / Classical crossover",
+  "year": 1990,
+  "aka": "DNA"
+ },
+ {
+  "cat": 291,
+  "artist": "Paul Simon",
+  "title": "The Obvious Child",
+  "notes": "Lead single from The Rhythm of the Saints, with drums by Brazil's Olodum recorded in Salvador. A UK Top 15 hit, it reached only US No. 92.",
+  "genre": "World / Pop rock",
+  "year": 1990
+ },
+ {
+  "cat": 292,
+  "artist": "Paul McCartney",
+  "title": "Birthday",
+  "notes": "A live version of the Beatles' 1968 song, recorded at Knebworth and released on 8 October 1990. It reached UK No. 29.",
+  "genre": "Rock / Live",
+  "year": 1990
+ },
+ {
+  "cat": 293,
+  "artist": "Cliff Richard",
+  "title": "From A Distance",
+  "notes": "Julie Gold's song, released in October 1990 as the title track of the live album From a Distance: The Event. It reached UK No. 11 and Irish No. 16.",
+  "genre": "Pop / Soft rock",
+  "year": 1990
+ },
+ {
+  "cat": 294,
+  "artist": "Dream Warriors",
+  "title": "My Definition Of A Boombastic Jazz Style",
+  "notes": "Toronto duo's jazz-rap hit, built on a sample of Quincy Jones's \"Soul Bossa Nova\". From the album And Now the Legacy Begins; it became a UK Top 20 hit in 1991 (one source says No. 13).",
+  "genre": "Hip hop / Jazz rap",
+  "year": 1990
+ },
+ {
+  "cat": 295,
+  "artist": "Cliff Richard",
+  "title": "Saviour's Day",
+  "notes": "Written by Chris Eaton and released in November 1990. It was the UK Christmas No. 1 for one week from 23 December, selling over 200,000 copies.",
+  "genre": "Pop / Christmas",
+  "year": 1990
+ },
+ {
+  "cat": 296,
+  "artist": "Julee Cruise",
+  "title": "Falling",
+  "notes": "The Twin Peaks theme, with music by Angelo Badalamenti and lyrics by David Lynch, from the album Floating into the Night. Reportedly reached UK No. 7 (one source).",
+  "genre": "Dream pop / Soundtrack",
+  "year": 1990
+ },
+ {
+  "cat": 297,
+  "artist": "The Grease Megamix",
+  "title": "You're The One That I Want / Greased Lightning / Summer Nights",
+  "notes": "A medley released in 1990 to mark the video release of Grease, mixing songs from the film with Olivia Newton-John and John Travolta's vocals. It reached UK No. 3.",
+  "genre": "Pop / Disco / Soundtrack",
+  "year": 1990
+ },
+ {
+  "cat": 298,
+  "artist": "Enigma",
+  "title": "Sadness Part 1",
+  "notes": "Gregorian-chant-meets-dance track by Michael Cretu, inspired by the Marquis de Sade. The UK single was titled \"Sadness Part I\". Released in late 1990, it hit UK No. 1 in January 1991 and was a US Top 5 hit.",
+  "genre": "New age / Dance",
+  "year": 1990,
+  "aka": "Sadeness"
+ },
+ {
+  "cat": 299,
+  "artist": "Queen",
+  "title": "Innuendo",
+  "notes": "Title track of Queen's penultimate album, with a flamenco section played by Steve Howe of Yes. It entered at UK No. 1 in January 1991, their first chart-topper since \"Under Pressure\".",
+  "genre": "Rock / Progressive rock",
+  "year": 1991
+ },
+ {
+  "cat": 300,
+  "artist": "Rick Astley",
+  "title": "Cry For Help",
+  "notes": "First single from the album Free, released in January 1991. It reached No. 7 in both the UK and the US.",
+  "genre": "Pop / Adult contemporary",
+  "year": 1991
+ },
+ {
+  "cat": 301,
+  "artist": "Belinda Carlisle",
+  "title": "Summer Rain",
+  "notes": "Written by Robbie Seidman and Maria Vidal, taken from Runaway Horses. Released as a UK single in December 1990, it reached UK No. 23 and US No. 30.",
+  "genre": "Pop rock",
+  "year": 1990
+ },
+ {
+  "cat": 302,
+  "artist": "Oleta Adams",
+  "title": "Get Here",
+  "notes": "A cover of Brenda Russell's 1988 song, co-produced by Roland Orzabal of Tears for Fears. It reached UK No. 4 and US No. 5, and became a Gulf War anthem for families of troops.",
+  "genre": "Soul / Pop",
+  "year": 1991
+ },
+ {
+  "cat": 303,
+  "artist": "The Simpsons",
+  "title": "Deep, Deep Trouble",
+  "notes": "Bart Simpson's rap, second single from The Simpsons Sing the Blues. Lyrics by Matt Groening and production by DJ Jazzy Jeff. A UK Top 10 hit (reportedly No. 7) and No. 1 in Ireland.",
+  "genre": "Novelty / Hip hop",
+  "year": 1991
+ },
+ {
+  "cat": 304,
+  "artist": "Cher",
+  "title": "The Shoop Shoop Song",
+  "notes": "Recorded for the film Mermaids, this cover of the 1964 Betty Everett hit (written by Rudy Clark) spent five weeks at UK No. 1 from late April 1991. It reached only US No. 33.",
+  "genre": "Pop",
+  "year": 1991
+ },
+ {
+  "cat": 305,
+  "artist": "Amy Grant",
+  "title": "Baby Baby",
+  "notes": "Released in January 1991 from the album Heart in Motion. It spent two weeks at US No. 1 in April 1991 and was a UK Top 10 hit, earning three Grammy nominations.",
+  "genre": "Pop / Contemporary Christian crossover",
+  "year": 1991
+ },
+ {
+  "cat": 306,
+  "artist": "Chris De Burgh",
+  "title": "The Simple Truth",
+  "notes": "Re-released in 1991 to raise money for Kurdish refugees after the Gulf War. It reached UK No. 36, having first come out in 1987 and reportedly reaching No. 55.",
+  "genre": "Pop rock / Ballad",
+  "year": 1991
+ },
+ {
+  "cat": 307,
+  "artist": "Beverley Craven",
+  "title": "Promise Me",
+  "notes": "Lead single from her debut album, it first failed to chart in 1990. Television appearances led to a re-release, and it reached UK No. 3 in May 1991.",
+  "genre": "Pop / Singer-songwriter",
+  "year": 1991
+ },
+ {
+  "cat": 308,
+  "artist": "T'Pau",
+  "title": "Whenever You Need Me",
+  "notes": "Lead single from the album The Promise, released in 1991. It reached UK No. 16.",
+  "genre": "Pop rock",
+  "year": 1991
+ },
+ {
+  "cat": 309,
+  "artist": "Yello",
+  "title": "Rubberbandman",
+  "notes": "The Swiss duo of Dieter Meier and Boris Blank, and the first single from the album Baby, released in May 1991. The UK chart peak was not found.",
+  "genre": "Electronic / Synth-pop",
+  "year": 1991
+ },
+ {
+  "cat": 310,
+  "artist": "Jimmy Soul",
+  "title": "If You Wanna Be Happy",
+  "notes": "Two weeks at US No. 1 in May 1963, adapted from the calypso \"Ugly Woman\" by Roaring Lion (1934). It reached UK No. 39 in 1963 and re-entered at No. 68 in 1991 after use in the film Mermaids.",
+  "genre": "Pop / Calypso",
+  "year": 1963
+ },
+ {
+  "cat": 311,
+  "artist": "Bryan Adams",
+  "title": "(Everything I Do) I Do It For You",
+  "notes": "From the film Robin Hood: Prince of Thieves, written by Adams, Michael Kamen and Mutt Lange. A record 16 weeks at UK No. 1 from July 1991, plus seven weeks at US No. 1 and a Grammy.",
+  "genre": "Rock / Power ballad",
+  "year": 1991
+ },
+ {
+  "cat": 312,
+  "artist": "Cher",
+  "title": "Love And Understanding",
+  "notes": "Written by Diane Warren and the lead single from the album Love Hurts, released in May 1991. The UK chart peak was not found.",
+  "genre": "Pop rock / Ballad",
+  "year": 1991
+ },
+ {
+  "cat": 313,
+  "artist": "Right Said Fred",
+  "title": "I'm Too Sexy",
+  "notes": "Debuted at UK No. 37, then climbed to No. 2 for six weeks, held off the top by Bryan Adams. It reportedly reached US No. 1 in early 1992 (one source).",
+  "genre": "Dance-pop / Novelty",
+  "year": 1991
+ },
+ {
+  "cat": 314,
+  "artist": "Jason Donovan",
+  "title": "Happy Together",
+  "notes": "A cover of the Turtles' 1967 hit, newly recorded for his Greatest Hits album and released in August 1991. Reportedly reached UK No. 10 (one fan-site source).",
+  "genre": "Pop",
+  "year": 1991
+ },
+ {
+  "cat": 315,
+  "artist": "Martika",
+  "title": "Love... Thy Will Be Done",
+  "notes": "Co-written by Martika and Prince, who also produced it. Released in July 1991 from Martika's Kitchen, it reached UK No. 9, US No. 10 and topped the Australian chart.",
+  "genre": "Pop / Funk",
+  "year": 1991
+ },
+ {
+  "cat": 316,
+  "artist": "Marc Cohn",
+  "title": "Silver Thunderbird",
+  "notes": "Follow-up to \"Walking in Memphis\" from his debut album, released in 1991. Reportedly reached UK No. 54 (one source) and US No. 63.",
+  "genre": "Rock / Singer-songwriter",
+  "year": 1991
+ },
+ {
+  "cat": 317,
+  "artist": "World In Union featuring Kiri Te Kanawa",
+  "title": "World In Union",
+  "notes": "The 1991 Rugby World Cup anthem, with lyrics by Charlie Skarbek set to Holst's \"Thaxted\" theme from Jupiter in The Planets. Released in September 1991, it reached UK No. 4.",
+  "genre": "Classical crossover",
+  "year": 1991
+ },
+ {
+  "cat": 318,
+  "artist": "Michael Bolton",
+  "title": "When A Man Loves A Woman",
+  "notes": "A cover of Percy Sledge's 1966 soul classic. It reached US No. 1 for a week in November 1991, and reportedly UK No. 8 (one source).",
+  "genre": "Pop / Soft rock",
+  "year": 1991
+ },
+ {
+  "cat": 319,
+  "artist": "Vic Reeves and the Wonder Stuff",
+  "title": "Dizzy",
+  "notes": "A cover of Tommy Roe's 1969 hit, with comedian Vic Reeves fronting the band. Two weeks at UK No. 1 from 3 November 1991, the Wonder Stuff's only chart-topper.",
+  "genre": "Alternative rock / Novelty",
+  "year": 1991
+ },
+ {
+  "cat": 320,
+  "artist": "Michael Jackson",
+  "title": "Black Or White",
+  "notes": "Lead single from Dangerous, released on 11 November 1991. It topped the charts in the UK, US and about 20 countries, with a John Landis video featuring Macaulay Culkin and a rap by Bill Bottrell.",
+  "genre": "Pop rock / Hard rock",
+  "year": 1991
+ },
+ {
+  "cat": 321,
+  "artist": "The New Seekers",
+  "title": "I'd Like To Teach The World To Sing",
+  "notes": "The Coca-Cola jingle \"I'd Like to Buy the World a Coke\" reworked by Roger Cook and Roger Greenaway with the product references removed. Four weeks at UK No. 1 around the turn of 1971-72, and a rival version by the Hillside Singers charted in the US.",
+  "genre": "Pop / Folk pop",
+  "year": 1971
+ },
+ {
+  "cat": 322,
+  "artist": "Mel Brooks",
+  "title": "To Be Or Not To Be",
+  "notes": "Written by Brooks and Pete Wingfield, who also produced it, as a spin-off from the film To Be or Not to Be. It reached UK No. 12 and Australian No. 3.",
+  "genre": "Comedy / Novelty rap",
+  "year": 1983
+ },
+ {
+  "cat": 323,
+  "artist": "Paul McCartney and The Frog Chorus",
+  "title": "We All Stand Together",
+  "notes": "From the animated film Rupert and the Frog Song, with backing from the King's Singers and the choir of St Paul's Cathedral. Released in November 1984, it reached UK No. 3.",
+  "genre": "Pop / Children's",
+  "year": 1984
+ },
+ {
+  "cat": 324,
+  "artist": "Pino D'angio",
+  "title": "Una Notte Da Impazzire",
+  "notes": "Italian funk and Italo disco singer, best known for \"Ma quale idea\" (1980), which sold over two million copies. This track came out as a 1981 12\" promo with \"Okay okay\". No chart data found.",
+  "genre": "Italo disco / Funk",
+  "year": 1981
+ },
+ {
+  "cat": 325,
+  "artist": "Julian Clary",
+  "title": "Wanderin' Star",
+  "notes": "The song is Lee Marvin's 1970 UK No. 1 from the film Paint Your Wagon. No source found for Julian Clary's recording, so the year and chart details are left blank.",
+  "genre": "Novelty / Pop",
+  "year": null
  }
 ];
