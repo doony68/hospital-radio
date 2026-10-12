@@ -6,6 +6,9 @@ A search page for my collection of singles. Open `index.html` (or visit `/single
 - Filter by genre or decade, sort, or show only singles with no notes yet.
 - Click an artist, year or genre on a card to filter by it.
 - Press `/` to jump to the search box.
+- Press **Preview** on a card to hear a 30 second clip. The page looks the song up on Apple's
+  free iTunes Search API when you click, so nothing extra is stored in `data.js`. If no clip
+  is found, use the YouTube / Spotify search links on the card instead.
 
 ## Updating the catalogue
 

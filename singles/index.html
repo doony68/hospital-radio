@@ -108,6 +108,16 @@
   .chip.plain { background: var(--surface-2); color: var(--muted); }
   .notes { margin: 0; overflow-wrap: anywhere; }
   .notes.empty { color: var(--muted); font-style: italic; }
+  .listen { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 2px; font-size: .88rem; }
+  .play {
+    font: inherit; font-size: .88rem; cursor: pointer; padding: 5px 14px; border-radius: 999px;
+    border: 0; background: var(--primary); color: var(--primary-text);
+  }
+  .play:hover { filter: brightness(1.1); }
+  .play:disabled { opacity: .7; cursor: progress; }
+  .play.on { background: var(--accent); color: #0f1822; }
+  .listen .status { color: var(--muted); }
+  .listen a { color: var(--link); text-underline-offset: 2px; }
   mark { background: var(--mark); color: var(--mark-text); border-radius: 3px; padding: 0 1px; }
 
   .none { text-align: center; color: var(--muted); padding: 36px 12px; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; }
@@ -242,13 +252,121 @@
              '<span class="chip plain">Cat. ' + r.cat + '</span></div>' +
              '<div class="artist"><button type="button" data-artist="' + esc(r.artist) + '" title="Search this artist">' +
              highlight(r.artist, words) + '</button>' + also + '</div>' +
-             '<div class="meta">' + yr + gen + '</div>' + notes + '</li>';
+             '<div class="meta">' + yr + gen + '</div>' + notes + listenRow(r) + '</li>';
     }).join('');
+    syncPlayButtons();
   }
+
+  // ---- Song previews ----------------------------------------------------
+  // Clicking Preview asks Apple's free iTunes Search API for the track and plays the
+  // 30-second clip it returns. Results are remembered so each song is only looked up once.
+  var player = new Audio();
+  player.preload = 'none';
+  var previews = {};          // cat -> { url, name } on a match, or null for "no match"
+  var playingCat = null;      // cat number of the clip that is loaded
+  var loadingCat = null;      // cat number being looked up right now
+  var failedCats = {};        // cat -> true when no preview could be found
+
+  function searchLinks(r) {
+    var term = encodeURIComponent(r.artist + ' ' + r.title);
+    return '<a href="https://www.youtube.com/results?search_query=' + term + '" target="_blank" rel="noopener">YouTube</a>' +
+           '<a href="https://open.spotify.com/search/' + term + '" target="_blank" rel="noopener">Spotify</a>';
+  }
+  function listenRow(r) {
+    return '<div class="listen" data-cat="' + r.cat + '">' +
+           '<button class="play" type="button" data-play="' + r.cat + '" aria-label="Play a 30 second preview of ' + esc(r.title) + ' by ' + esc(r.artist) + '">&#9654; Preview</button>' +
+           '<span class="status" aria-live="polite"></span>' +
+           '<span class="status">Find it on:</span>' + searchLinks(r) + '</div>';
+  }
+
+  // Words that rarely help matching, and result names that are covers rather than the record.
+  var STOP = { the: 1, and: 1, a: 1, of: 1 };
+  var COVER = /karaoke|tribute|made famous|originally performed|in the style of|cover|instrumental|\blive\b/i;
+  function words(s) { return norm(s).split(' ').filter(function (w) { return w && !STOP[w]; }); }
+  function baseTitle(s) { return norm(String(s || '').replace(/[\(\[].*?[\)\]]/g, ' ')); }
+
+  // Pick the best Apple result for a single, or null if nothing looks like the right record.
+  function pickMatch(r, results) {
+    var want = baseTitle(r.title);
+    var artistWords = words(r.artist + ' ' + (r.aka || ''));
+    var best = null, bestScore = 0;
+    (results || []).forEach(function (x, i) {
+      if (!x.previewUrl || !x.trackName) return;
+      var got = baseTitle(x.trackName);
+      var gotArtist = norm(x.artistName);
+      if (got !== want && got.indexOf(want) !== 0) return;               // title must match
+      var hits = artistWords.filter(function (w) { return gotArtist.indexOf(w) >= 0; }).length;
+      if (!hits) return;                                                  // and so must some of the artist
+      var score = 10 + hits / artistWords.length * 10 - i * 0.1;
+      if (got === want) score += 5;
+      if (COVER.test(x.trackName + ' ' + (x.collectionName || ''))) score -= 8;
+      if (score > bestScore) { bestScore = score; best = x; }
+    });
+    return best ? { url: best.previewUrl, name: best.trackName + ' - ' + best.artistName } : null;
+  }
+
+  function lookup(r) {
+    if (previews.hasOwnProperty(r.cat)) return Promise.resolve(previews[r.cat]);
+    var url = 'https://itunes.apple.com/search?media=music&entity=song&limit=15&country=GB&term=' +
+              encodeURIComponent(r.artist + ' ' + r.title);
+    return fetch(url).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function (json) {
+      return (previews[r.cat] = pickMatch(r, json.results));
+    });
+  }
+
+  // Make every Preview button on screen reflect what is happening (the list is redrawn on each search).
+  function syncPlayButtons() {
+    Array.prototype.forEach.call(els.results.querySelectorAll('.play'), function (b) {
+      var cat = Number(b.dataset.play);
+      var on = cat === playingCat && !player.paused;
+      b.classList.toggle('on', on);
+      b.disabled = cat === loadingCat;
+      b.innerHTML = cat === loadingCat ? 'Loading&hellip;' : on ? '&#9208; Pause' : '&#9654; Preview';
+      b.parentNode.querySelector('.status').textContent =
+        failedCats[cat] ? 'No preview available - try a link instead.' : on ? 'Playing a 30 second clip' : '';
+    });
+  }
+
+  function togglePlay(cat) {
+    var r = DATA.filter(function (x) { return x.cat === cat; })[0];
+    if (!r) return;
+    if (playingCat === cat) {                       // same song: pause / resume
+      if (player.paused) player.play(); else player.pause();
+      return;
+    }
+    player.pause();
+    playingCat = null;
+    loadingCat = cat;
+    delete failedCats[cat];
+    syncPlayButtons();
+    lookup(r).then(function (p) {
+      if (loadingCat !== cat) return;               // the user clicked something else meanwhile
+      loadingCat = null;
+      if (!p) { failedCats[cat] = true; syncPlayButtons(); return; }
+      player.src = p.url;
+      playingCat = cat;
+      return player.play().then(function () { syncPlayButtons(); });
+    }).catch(function () {
+      if (loadingCat === cat) loadingCat = null;
+      playingCat = null;
+      failedCats[cat] = true;
+      syncPlayButtons();
+    });
+  }
+  ['play', 'pause', 'ended'].forEach(function (ev) {
+    player.addEventListener(ev, function () {
+      if (ev === 'ended') playingCat = null;
+      syncPlayButtons();
+    });
+  });
 
   // Click an artist, genre or year on a card to filter by it.
   els.results.addEventListener('click', function (e) {
     var t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.play) { togglePlay(Number(t.dataset.play)); return; }
     if (t.dataset.artist) { els.q.value = t.dataset.artist; }
     else if (t.dataset.genre) { els.genre.value = t.dataset.genre; }
     else if (t.dataset.decade) { els.decade.value = t.dataset.decade; }
