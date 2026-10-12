@@ -89,8 +89,15 @@
   .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
   .card {
     background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px; box-shadow: var(--shadow); display: grid; gap: 6px;
+    padding: 14px 16px; box-shadow: var(--shadow); display: flex; gap: 14px; align-items: flex-start;
   }
+  .card .body { display: grid; gap: 6px; flex: 1 1 auto; min-width: 0; }
+  .art {
+    flex: 0 0 auto; width: 76px; height: 76px; border-radius: 8px; overflow: hidden;
+    background: var(--surface-2); color: var(--muted); border: 1px solid var(--line);
+    display: grid; place-items: center; font-size: 1.8rem; user-select: none;
+  }
+  .art img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .card .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; align-items: baseline; }
   .card h2 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
   .card .artist { color: var(--muted); overflow-wrap: anywhere; }
@@ -122,7 +129,7 @@
 
   .none { text-align: center; color: var(--muted); padding: 36px 12px; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; }
   footer { margin-top: 28px; color: var(--muted); font-size: .85rem; }
-  @media (max-width: 520px) { .filters select { min-width: 0; width: 100%; } .filters label { flex: 1 1 140px; } }
+  @media (max-width: 520px) { .card { gap: 10px; padding: 12px; } .art { width: 56px; height: 56px; font-size: 1.4rem; } .filters select { min-width: 0; width: 100%; } .filters label { flex: 1 1 140px; } }
 </style>
 </head>
 <body>
@@ -248,13 +255,80 @@
       var also = r.aka ? ' <span class="chip plain" title="Corrected spelling">' + esc(r.aka) + '</span>' : '';
       var notes = r.notes ? '<p class="notes">' + highlight(r.notes, words) + '</p>'
                           : '<p class="notes empty">No notes yet.</p>';
-      return '<li class="card"><div class="head"><h2>' + highlight(r.title, words) + '</h2>' +
+      return '<li class="card">' + artHtml(r) + '<div class="body"><div class="head"><h2>' + highlight(r.title, words) + '</h2>' +
              '<span class="chip plain">Cat. ' + r.cat + '</span></div>' +
              '<div class="artist"><button type="button" data-artist="' + esc(r.artist) + '" title="Search this artist">' +
              highlight(r.artist, words) + '</button>' + also + '</div>' +
-             '<div class="meta">' + yr + gen + '</div>' + notes + listenRow(r) + '</li>';
+             '<div class="meta">' + yr + gen + '</div>' + notes + listenRow(r) + '</div></li>';
     }).join('');
     syncPlayButtons();
+    observeArt();
+  }
+
+  // ---- Cover art --------------------------------------------------------
+  // Each card shows a small cover from the same iTunes lookup the Preview button uses. Art is only
+  // fetched for cards that are on screen, one request every few seconds (Apple limits how fast a
+  // browser may ask), and remembered in this browser so it is only ever fetched once.
+  var ART_KEY = 'singles-art-v1';
+  var artStore = {};          // artKey -> image URL, or '' when Apple has no match
+  try { artStore = JSON.parse(localStorage.getItem(ART_KEY) || '{}') || {}; } catch (e) { artStore = {}; }
+  var byCat = {}; DATA.forEach(function (r) { byCat[r.cat] = r; });
+
+  function artKey(r) { return r.cat + '|' + norm(r.artist + ' ' + r.title); }
+  function hasArt(r) { return Object.prototype.hasOwnProperty.call(artStore, artKey(r)); }
+  function artFrom(x) {
+    var u = x && x.artworkUrl100 ? String(x.artworkUrl100).replace('100x100bb', '200x200bb') : '';
+    return /^https:\/\/[a-z0-9.-]*mzstatic\.com\//.test(u) ? u : '';
+  }
+  function artInner(url) { return url ? '<img src="' + esc(url) + '" alt="" loading="lazy">' : '&#9835;'; }
+  function artHtml(r) {
+    var done = hasArt(r);
+    return '<div class="art" data-art="' + r.cat + '"' + (done ? ' data-done="1"' : '') + ' aria-hidden="true">' +
+           artInner(done ? artStore[artKey(r)] : '') + '</div>';
+  }
+  function rememberArt(r, url) {
+    artStore[artKey(r)] = url || '';
+    try { localStorage.setItem(ART_KEY, JSON.stringify(artStore)); } catch (e) {}
+    var el = els.results.querySelector('.art[data-art="' + r.cat + '"]');
+    if (el) { el.dataset.done = '1'; el.innerHTML = artInner(url); }
+  }
+  // A cover that fails to load falls back to the music-note placeholder.
+  els.results.addEventListener('error', function (e) {
+    if (e.target.tagName === 'IMG' && e.target.parentNode) e.target.parentNode.innerHTML = '&#9835;';
+  }, true);
+
+  var visible = {}, queue = [], retries = {}, artBusy = false;
+  var observer = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      var cat = Number(en.target.dataset.art);
+      if (en.isIntersecting) { visible[cat] = true; if (queue.indexOf(cat) < 0) queue.push(cat); }
+      else delete visible[cat];
+    });
+    pumpArt();
+  }, { rootMargin: '150px' }) : null;
+
+  function observeArt() {
+    if (!observer) return;
+    observer.disconnect(); visible = {}; queue = [];
+    Array.prototype.forEach.call(els.results.querySelectorAll('.art:not([data-done])'), function (el) { observer.observe(el); });
+  }
+  function pumpArt() {
+    if (artBusy) return;
+    var r = null;
+    while (queue.length && !r) {
+      var c = queue.shift();
+      if (visible[c] && byCat[c] && !hasArt(byCat[c])) r = byCat[c];
+    }
+    if (!r) return;
+    artBusy = true;
+    var wait = 3200;
+    lookup(r).catch(function (err) {
+      retries[r.cat] = (retries[r.cat] || 0) + 1;
+      if (retries[r.cat] <= 2) queue.push(r.cat);                  // try again later, never cache a failure
+      wait = err && (err.status === 403 || err.status === 429) ? 60000 : 8000;
+    }).then(function () {
+      setTimeout(function () { artBusy = false; pumpArt(); }, wait);
+    });
   }
 
   // ---- Song previews ----------------------------------------------------
@@ -291,7 +365,7 @@
     var artistWords = words(r.artist + ' ' + (r.aka || ''));
     var best = null, bestScore = 0;
     (results || []).forEach(function (x, i) {
-      if (!x.previewUrl || !x.trackName) return;
+      if (!x.trackName) return;
       var got = baseTitle(x.trackName);
       var gotArtist = norm(x.artistName);
       if (got !== want && got.indexOf(want) !== 0) return;               // title must match
@@ -299,22 +373,31 @@
       if (!hits) return;                                                  // and so must some of the artist
       var score = 10 + hits / artistWords.length * 10 - i * 0.1;
       if (got === want) score += 5;
+      if (x.previewUrl) score += 3;
       if (COVER.test(x.trackName + ' ' + (x.collectionName || ''))) score -= 8;
       if (score > bestScore) { bestScore = score; best = x; }
     });
-    return best ? { url: best.previewUrl, name: best.trackName + ' - ' + best.artistName } : null;
+    return best ? { url: best.previewUrl || '', name: best.trackName + ' - ' + best.artistName, art: artFrom(best) } : null;
   }
 
+  var inflight = {};          // cat -> promise, so a click and the artwork queue share one request
   function lookup(r) {
     if (previews.hasOwnProperty(r.cat)) return Promise.resolve(previews[r.cat]);
+    if (inflight[r.cat]) return inflight[r.cat];
     var url = 'https://itunes.apple.com/search?media=music&entity=song&limit=15&country=GB&term=' +
               encodeURIComponent(r.artist + ' ' + r.title);
-    return fetch(url).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+    return (inflight[r.cat] = fetch(url).then(function (res) {
+      if (!res.ok) { var e = new Error('HTTP ' + res.status); e.status = res.status; throw e; }
       return res.json();
     }).then(function (json) {
-      return (previews[r.cat] = pickMatch(r, json.results));
-    });
+      var p = previews[r.cat] = pickMatch(r, json.results);
+      delete inflight[r.cat];
+      rememberArt(r, p && p.art);
+      return p;
+    }, function (err) {
+      delete inflight[r.cat];
+      throw err;
+    }));
   }
 
   // Make every Preview button on screen reflect what is happening (the list is redrawn on each search).
@@ -345,7 +428,7 @@
     lookup(r).then(function (p) {
       if (loadingCat !== cat) return;               // the user clicked something else meanwhile
       loadingCat = null;
-      if (!p) { failedCats[cat] = true; syncPlayButtons(); return; }
+      if (!p || !p.url) { failedCats[cat] = true; syncPlayButtons(); return; }
       player.src = p.url;
       playingCat = cat;
       return player.play().then(function () { syncPlayButtons(); });
