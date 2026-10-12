@@ -6,6 +6,9 @@ A search page for my collection of singles. Open `index.html` (or visit `/single
 - Filter by genre or decade, sort, or show only singles with no notes yet.
 - Click an artist, year or genre on a card to filter by it.
 - Press `/` to jump to the search box.
+- Each card shows a small cover. Covers load as you scroll (about one every 3 seconds, to stay
+  within Apple's request limit) and are remembered in your browser. Singles Apple can't match
+  show a music-note tile instead. Clearing your browser's site data makes them reload.
 - Press **Preview** on a card to hear a 30 second clip. The page looks the song up on Apple's
   free iTunes Search API when you click, so nothing extra is stored in `data.js`. If no clip
   is found, use the YouTube / Spotify search links on the card instead.
