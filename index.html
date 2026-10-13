@@ -78,6 +78,13 @@
   .rm:hover { color: var(--danger); background: var(--danger-soft); }
   .head button:focus-visible, footer button:focus-visible, .rm:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
   .listmeta { color: var(--muted); font-size: .88rem; }
+  .pv { grid-column: 2 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 2px; font-size: .82rem; }
+  .pvbtn { background: var(--chip-bg); color: var(--chip-text); border: 1px solid var(--chip-edge); border-radius: 999px; padding: 2px 11px; font: inherit; font-size: .82rem; cursor: pointer; }
+  .pvbtn:hover { border-color: var(--primary); }
+  .pvbtn.on { background: var(--primary); border-color: var(--primary); color: var(--primary-text); }
+  .pvbtn:disabled { opacity: .7; cursor: progress; }
+  .pvstatus { color: var(--muted); overflow-wrap: anywhere; }
+  .pv a { color: var(--link); }
   .addrow { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr) 84px auto; gap: 8px; align-items: end; }
   .addrow[hidden] { display: none; }
   .addrow label { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); }
@@ -881,14 +888,126 @@
     }).join('');
   }
 
+  // ---- Song previews ----------------------------------------------------
+  // Same approach as the singles page: pressing Preview asks Apple's free iTunes Search API for the
+  // song and plays the 30-second clip it returns. Nothing is stored in the sheet, and each song is
+  // only looked up once. The match is automatic, so the matched track is shown to be checked by ear.
+  var player = new Audio();
+  player.preload = 'none';
+  var clips = {};             // song key -> { url, name, weak } on a match, or null for "no match"
+  var playingKey = null;      // key of the clip that is loaded
+  var loadingKey = null;      // key being looked up right now
+  var failedKeys = {};        // key -> true when no preview could be found
+  var inflight = {};          // key -> promise, so a double click shares one request
+
+  // Result names that are covers rather than the original recording
+  var COVER = /karaoke|tribute|made famous|originally performed|in the style of|cover|\blive\b/i;
+  var STOP = { the: 1, and: 1, a: 1, of: 1, from: 1, in: 1, to: 1 };
+  function words(s) { return norm(s).split(' ').filter(function (w) { return w && !STOP[w]; }); }
+  function baseTitle(s) { return norm(String(s || '').replace(/[\(\[].*?[\)\]]/g, ' ')); }
+
+  // The best Apple result for a song: the title must match; the show's words (in the track, album or
+  // artist, e.g. "Wicked (Original Broadway Cast Recording)") and not being a cover raise the score.
+  function pickClip(p, results) {
+    var want = baseTitle(p.song), showWords = words(p.show), best = null, bestScore = -Infinity, bestHits = 0;
+    (results || []).forEach(function (x, i) {
+      if (!x.trackName || !/^https:\/\//.test(x.previewUrl || '')) return;
+      var got = baseTitle(x.trackName);
+      if (got !== want && got.indexOf(want) !== 0) return;                  // the title must match
+      var hay = ' ' + norm(x.trackName + ' ' + (x.collectionName || '') + ' ' + (x.artistName || '')) + ' ';
+      var hits = showWords.filter(function (w) { return hay.indexOf(' ' + w + ' ') >= 0; }).length;
+      var score = 10 + (showWords.length ? hits / showWords.length * 10 : 0) - i * 0.1;
+      if (got === want) score += 2;
+      if (COVER.test(x.trackName + ' ' + (x.collectionName || ''))) score -= 8;
+      if (score > bestScore) { bestScore = score; best = x; bestHits = hits; }
+    });
+    return best ? { url: best.previewUrl, name: best.trackName + ' - ' + best.artistName, weak: showWords.length > 0 && !bestHits } : null;
+  }
+
+  function lookupClip(p) {
+    if (clips.hasOwnProperty(p.key)) return Promise.resolve(clips[p.key]);
+    if (inflight[p.key]) return inflight[p.key];
+    var url = 'https://itunes.apple.com/search?media=music&entity=song&limit=15&country=GB&term=' + encodeURIComponent(p.song + ' ' + p.show);
+    return (inflight[p.key] = fetch(url).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function (json) {
+      delete inflight[p.key];
+      return (clips[p.key] = pickClip(p, json.results));
+    }, function (err) {
+      delete inflight[p.key];
+      throw err;
+    }));
+  }
+
+  function previewRow(p) {
+    return '<span class="pv"><button type="button" class="pvbtn" data-pv="' + esc(p.key) + '" aria-label="Play a 30 second preview of ' + esc(p.song) + '">&#9654; Preview</button>' +
+      '<span class="pvstatus" aria-live="polite"></span>' +
+      '<a href="https://music.apple.com/gb/search?term=' + encodeURIComponent(p.song + ' ' + p.show) + '" target="_blank" rel="noopener">Apple Music &#8599;</a></span>';
+  }
+
+  // Make every Preview button in the list reflect what is happening (the list is redrawn on each edit)
+  function syncPreview() {
+    Array.prototype.forEach.call($('suggestList').querySelectorAll('.pvbtn'), function (b) {
+      var key = b.dataset.pv, on = key === playingKey && !player.paused, c = clips[key];
+      b.classList.toggle('on', on);
+      b.disabled = key === loadingKey;
+      b.innerHTML = key === loadingKey ? 'Loading&hellip;' : on ? '&#9208; Pause' : '&#9654; Preview';
+      b.nextSibling.textContent = failedKeys[key] === 'again' ? 'Press Preview again to play it.'
+        : failedKeys[key] ? 'No preview available - try the Apple Music link.'
+        : (key === playingKey && c) ? (on ? (c.weak ? 'Closest match, may not be from the show: ' : 'Playing: ') : 'Paused: ') + c.name : '';
+    });
+  }
+
+  function stopPreview() {
+    player.pause();
+    playingKey = loadingKey = null;
+    syncPreview();
+  }
+
+  function togglePreview(key) {
+    var p = suggestion && suggestion.picks.filter(function (x) { return x.key === key; })[0];
+    if (!p) return;
+    if (playingKey === key) {                       // same song: pause / resume
+      if (player.paused) player.play(); else player.pause();
+      return;
+    }
+    player.pause();
+    playingKey = null;
+    loadingKey = key;
+    delete failedKeys[key];
+    syncPreview();
+    lookupClip(p).then(function (c) {
+      if (loadingKey !== key) return;               // the user clicked something else meanwhile
+      loadingKey = null;
+      if (!c) { failedKeys[key] = true; syncPreview(); return; }
+      player.src = c.url;
+      playingKey = key;
+      return player.play().then(function () { syncPreview(); });
+    }).catch(function (err) {
+      if (err && err.name === 'AbortError') return; // paused or switched before it started: not a failure
+      if (loadingKey === key) loadingKey = null;
+      playingKey = null;
+      failedKeys[key] = err && err.name === 'NotAllowedError' ? 'again' : true; // some browsers block autoplay after a lookup
+      syncPreview();
+    });
+  }
+  ['play', 'pause', 'ended'].forEach(function (ev) {
+    player.addEventListener(ev, function () {
+      if (ev === 'ended') playingKey = null;
+      syncPreview();
+    });
+  });
+
   function renderList() {
     var picks = suggestion.picks, n = picks.length;
     $('suggestList').innerHTML = picks.map(function (p, i) {
       return '<li><span class="n">' + (i + 1) + '</span><span class="what"><b>' + esc(p.song) + '</b><span class="film">' + esc(p.show) + '</span></span>' +
         '<span class="vibe ' + p.vibe + '">' + p.vibe + '</span>' +
         '<button type="button" class="rm" data-rm="' + i + '" aria-label="Remove ' + esc(p.song) + ' from the list">Remove</button>' +
-        '<span class="why">' + esc(reasonFor(p, i, n)) + '</span></li>';
+        '<span class="why">' + esc(reasonFor(p, i, n)) + '</span>' + previewRow(p) + '</li>';
     }).join('');
+    syncPreview();
     var research = picks.filter(needsResearch).length;
     $('listMeta').textContent = n + (n === 1 ? ' song' : ' songs') + ' in the list' + (edited ? ' (edited)' : '') +
       (n ? ' · ' + research + ' to research in Claude, ' + (n - research) + ' already in your sheet' : '');
@@ -903,6 +1022,7 @@
     if (!again) { seen = {}; round = 0; prevKeys = null; }
     edited = false;
     say('');
+    stopPreview();
     var b = buildPool(excludeN);
     var warn = $('suggestWarn'), enough = b.pool.length >= 13;
     var factsHtml =
@@ -946,11 +1066,15 @@
     excludeN = +b.dataset.excl; showSuggestion(false);
   });
   $('closeDlg').addEventListener('click', function () { $('suggestDlg').close(); });
+  $('suggestDlg').addEventListener('close', stopPreview);
 
   // Remove a song from the list
   $('suggestList').addEventListener('click', function (e) {
+    var pv = e.target.closest('[data-pv]');
+    if (pv) { togglePreview(pv.dataset.pv); return; }
     var b = e.target.closest('[data-rm]'); if (!b || !suggestion) return;
     var i = +b.dataset.rm, gone = suggestion.picks.splice(i, 1)[0];
+    if (gone.key === playingKey || gone.key === loadingKey) stopPreview();
     edited = true;
     renderList();
     say('Removed “' + gone.song + '”.');
