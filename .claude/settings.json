@@ -1,10 +1,20 @@
 {
   "extraKnownMarketplaces": {
     "online-scout-manager-mods": {
-      "source": { "source": "github", "repo": "doony68/Online-Scout-Manager" }
+      "source": {
+        "source": "github",
+        "repo": "doony68/Online-Scout-Manager"
+      }
+    },
+    "doony68-language": {
+      "source": {
+        "source": "github",
+        "repo": "doony68/language"
+      }
     }
   },
   "enabledPlugins": {
-    "branch-status@online-scout-manager-mods": true
+    "branch-status@online-scout-manager-mods": true,
+    "clean-view@doony68-language": true
   }
 }
