@@ -750,7 +750,7 @@
       .map(function (s) {
         var y = yearOf(s.meta);
         return { key: s.key, song: s.song, show: s.show, vibe: guessVibe(s.song, s.show), guessed: false,
-          plays: s.plays.length, last: s.lastAll, decade: decadeOf(y), meta: s.meta, isNew: false };
+          plays: s.plays.length, last: s.lastAll, decade: decadeOf(y), genre: norm(String(s.meta.genre || '').split('/')[0]), meta: s.meta, isNew: false };
       });
     var recent = {};
     DATA.songs.forEach(function (s) { if (s.plays.some(function (p) { return inLast[p.tab]; })) recent[s.key] = 1; });
@@ -764,37 +764,52 @@
   }
 
   // Picks 13 songs: upbeat on odd positions (7), slow on even (6), so no two neighbours share a vibe.
-  // Opens and closes with well-known upbeat songs; spreads shows and eras. Randomised so "Suggest again" differs.
-  function pickPlaylist(pool, seen) {
-    var N = 13, chosen = new Array(N), taken = {}, showUse = {}, eraUse = {};
-    var minSeen = Math.min.apply(null, pool.map(function (c) { return seen[c.key] || 0; }));
+  // Every slot is a weighted random draw (not "highest score wins"), so each press gives a different list:
+  //  - songs not yet suggested this visit are used up before any is repeated, so each list is a full refresh
+  //  - shows, eras and genres are spread out, and shows from the previous list are avoided
+  //  - the opener and closer are drawn from songs you've played before, favouring (but not always picking) the most-played
+  function pickPlaylist(pool, seen, prevShows) {
+    var N = 13, chosen = new Array(N), taken = {}, showUse = {}, eraUse = {}, genreUse = {}, showSize = {};
+    pool.forEach(function (c) { showSize[c.show] = (showSize[c.show] || 0) + 1; });
     var order = [0, N - 1];
     for (var i = 1; i < N - 1; i++) order.push(i);
 
     order.forEach(function (pos) {
       var want = pos % 2 === 0 ? 'upbeat' : 'slow';
       var ends = pos === 0 || pos === N - 1;
-      var best = null, bestScore = -Infinity;
-      pool.forEach(function (c) {
-        if (taken[c.key]) return;
-        var score = Math.random() * (ends ? 2 : 2.5);
-        score -= 6 * Math.min(3, (seen[c.key] || 0) - minSeen); // songs from earlier suggestions go to the back of the queue (capped so the vibe rule still wins)
-        if (c.vibe === want) score += 0;
-        else if (c.vibe === 'unsure') score -= 0.3;
-        else score -= 100; // wrong vibe: only if nothing else is left, whatever the other penalties add up to
-        if (ends) score += Math.log(1 + c.plays) * 2; // well-known = played often
-        else score += Math.min(1, monthsSince(c.last) / 12) * 0.8; // rested for a while
-        score -= 4 * (showUse[c.show] || 0);
-        if ((chosen[pos - 1] && chosen[pos - 1].show === c.show) || (chosen[pos + 1] && chosen[pos + 1].show === c.show)) score -= 6;
-        if (c.decade) score -= 1.2 * (eraUse[c.decade] || 0);
-        if (score > bestScore) { bestScore = score; best = c; }
+      var fit = pool.filter(function (c) { return !taken[c.key] && (c.vibe === want || c.vibe === 'unsure'); });
+      if (!fit.length) fit = pool.filter(function (c) { return !taken[c.key]; }); // nothing of the right vibe is left
+      if (ends) {
+        var known = fit.filter(function (c) { return c.plays >= 2; });
+        if (known.length >= 6) fit = known;
+      }
+      var least = Math.min.apply(null, fit.map(function (c) { return seen[c.key] || 0; }));
+      fit = fit.filter(function (c) { return (seen[c.key] || 0) === least; });
+
+      var weights = fit.map(function (c) {
+        var w = 0; // log-weight: each factor below nudges the odds up or down
+        if (c.vibe !== want && c.vibe !== 'unsure') w -= 100;     // wrong vibe: only if nothing else is left
+        if (c.vibe === 'unsure') w -= 0.9;                         // prefer songs whose vibe is known over guesses
+        if (ends) w += 0.8 * Math.log(1 + c.plays);                // a favourite, but not always the top one
+        else w += Math.min(1, monthsSince(c.last) / 12) * 0.8;     // rested for a while
+        w -= 0.5 * Math.log(showSize[c.show]);                     // big shows don't dominate
+        w -= 6 * (showUse[c.show] || 0);                           // one song per show where possible
+        if ((chosen[pos - 1] && chosen[pos - 1].show === c.show) || (chosen[pos + 1] && chosen[pos + 1].show === c.show)) w -= 8;
+        if (prevShows[c.show]) w -= 1.5;                           // a show that was in the last list
+        if (c.decade) w -= 0.5 * (eraUse[c.decade] || 0);
+        if (c.genre) w -= 0.4 * (genreUse[c.genre] || 0);
+        return Math.exp(w);
       });
+      var r = Math.random() * weights.reduce(function (a, x) { return a + x; }, 0), best = fit[fit.length - 1];
+      for (var k = 0; k < fit.length; k++) { r -= weights[k]; if (r <= 0) { best = fit[k]; break; } }
+
       var pick = Object.assign({}, best);
       if (pick.vibe === 'unsure') { pick.vibe = want; pick.guessed = true; }
       chosen[pos] = pick;
       taken[pick.key] = 1;
       showUse[pick.show] = (showUse[pick.show] || 0) + 1;
       if (pick.decade) eraUse[pick.decade] = (eraUse[pick.decade] || 0) + 1;
+      if (pick.genre) genreUse[pick.genre] = (genreUse[pick.genre] || 0) + 1;
     });
 
     return chosen;
@@ -874,7 +889,9 @@
     return Promise.resolve(fallback());
   }
 
-  var suggestion = null, excludeN = 4, seen = {}, round = 0, prevKeys = null, edited = false, optionMap = {};
+  var suggestion = null, excludeN = 4, seen = {}, round = 0, prevKeys = null, prevShows = {}, edited = false, optionMap = {};
+  // What has been suggested so far this visit. Kept when the window is reopened, so a fresh press is a fresh list.
+  function resetHistory() { seen = {}; round = 0; prevKeys = null; prevShows = {}; }
 
   function say(msg) { $('suggestMsg').textContent = msg || ''; }
 
@@ -1016,10 +1033,9 @@
     ['saveCsv', 'openClaude', 'copyReq'].forEach(function (id) { $(id).disabled = n === 0; });
   }
 
-  // again = true re-runs the choice, steering away from songs already suggested; false starts afresh
+  // again = true is the Suggest again button (it asks before discarding edits); false is opening the window
   function showSuggestion(again) {
     if (again && edited && !window.confirm('Suggest again will replace the changes you made to the list. Continue?')) return;
-    if (!again) { seen = {}; round = 0; prevKeys = null; }
     edited = false;
     say('');
     stopPreview();
@@ -1043,12 +1059,14 @@
       return;
     }
 
-    var picks = pickPlaylist(b.pool, seen);
+    var picks = pickPlaylist(b.pool, seen, prevShows);
     round++;
     var fresh = prevKeys ? picks.filter(function (p) { return !prevKeys[p.key]; }).length : picks.length;
-    prevKeys = {};
-    picks.forEach(function (p) { seen[p.key] = (seen[p.key] || 0) + 1; prevKeys[p.key] = 1; });
-    if (round > 1) $('suggestFacts').innerHTML = factsHtml + '<div>Suggestion ' + round + ': <b>' + fresh + '</b> of ' + picks.length + ' songs are new compared with the last one</div>';
+    var showsNow = picks.reduce(function (m, p) { m[p.show] = 1; return m; }, {});
+    var freshShows = Object.keys(showsNow).filter(function (x) { return !prevShows[x]; }).length;
+    prevKeys = {}; prevShows = {};
+    picks.forEach(function (p) { seen[p.key] = (seen[p.key] || 0) + 1; prevKeys[p.key] = 1; prevShows[p.show] = 1; });
+    if (round > 1) $('suggestFacts').innerHTML = factsHtml + '<div>Suggestion ' + round + ': <b>' + fresh + '</b> of ' + picks.length + ' songs are new compared with the last list, and <b>' + freshShows + '</b> of ' + Object.keys(showsNow).length + ' shows</div>';
     suggestion = { picks: picks, excludedShows: b.excludedShows, excludeN: excludeN, recent: b.recent };
     renderList();
   }
@@ -1063,7 +1081,7 @@
   $('again').addEventListener('click', function () { showSuggestion(true); });
   $('suggestWarn').addEventListener('click', function (e) {
     var b = e.target.closest('[data-excl]'); if (!b) return;
-    excludeN = +b.dataset.excl; showSuggestion(false);
+    excludeN = +b.dataset.excl; resetHistory(); showSuggestion(false);
   });
   $('closeDlg').addEventListener('click', function () { $('suggestDlg').close(); });
   $('suggestDlg').addEventListener('close', stopPreview);
@@ -1148,6 +1166,7 @@
     showStatus('Loading your playlists…');
     try {
       DATA = buildData(await fetchSheets());
+      resetHistory();
     } catch (err) {
       var hint = err.status === 403 || err.status === 400 || err.status === 404
         ? '<p>Check that the sheet is shared as <em>Anyone with the link can view</em> and that the API key in <code>config.js</code> is correct and allowed for this web address.</p>'
